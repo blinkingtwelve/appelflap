@@ -1,0 +1,40 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+apply plugin: 'kotlinx-serialization'
+
+buildscript {
+    repositories { jcenter() }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlin_serialization_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    // jetty 9.4 needs a couple of java NIO things not included in Android 7
+    // jetty 9.3 crashes on Android 6 with an IllegalArgumentException in formatTimestamp in util/Jetty.java
+    //noinspection GradleDependency
+    implementation 'org.eclipse.jetty:jetty-server:9.2.30.v20200428'
+    implementation 'commons-cli:commons-cli:1.4'
+
+    implementation project(path: ':koekoek')
+    implementation project(path: ':kitchensink')
+}
+
+
+task fatjar(type: Jar) {
+    duplicatesStrategy = DuplicatesStrategy.WARN
+    excludes = ['META-INF/*']
+    manifest {
+        attributes 'Implementation-Title': project.displayName,
+                'Main-Class': 'org.nontrivialpursuit.eekhoorn.CLI'
+    }
+    archiveBaseName = project.name
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}

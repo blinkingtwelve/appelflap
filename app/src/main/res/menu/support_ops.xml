@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/action_shutdown"
+        android:icon="@drawable/ic_action_shutdown"
+        android:orderInCategory="80"
+        android:title="@string/menu_shutdown"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_seed"
+        android:icon="@drawable/ic_action_gift"
+        android:orderInCategory="70"
+        android:title="@string/menu_gift"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_refresh"
+        android:icon="@drawable/ic_action_refresh"
+        android:orderInCategory="100"
+        android:title="@string/menu_reload_webview"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/action_zap"
+        android:icon="@drawable/ic_action_zap"
+        android:orderInCategory="90"
+        android:title="@string/menu_reset"
+        app:showAsAction="always" />
+</menu>

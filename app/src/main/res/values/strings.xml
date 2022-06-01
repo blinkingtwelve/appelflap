@@ -1,0 +1,56 @@
+<resources>
+    <string name="menu_reload_webview">reload</string>
+    <string name="menu_gift">Share app</string>
+    <string name="menu_hide_bar">Hide menu</string>
+    <string name="menu_shutdown">shutdown</string>
+    <string name="menu_reset">reset</string>
+
+    <string name="download_downloading">Downloading %1$s</string>
+    <string name="download_already_downloading">Please wait for the %1$s download</string>
+    <string name="download_retrying">There\'s a problem with download %1$s. It is going to be retried automatically.</string>
+    <string name="download_no_handler">There is no app to open your download of type \"%1$s\".</string>
+    <string name="download_no_downloadmanager">Your download manager is disabled. Re-enable it or contact support if you need help.</string>
+    <string name="download_no_storage_permission">No permission to store downloads.</string>
+
+    <string name="prompt_clear_field">Clear</string>
+    <string name="prompt_username">username</string>
+    <string name="prompt_password">password</string>
+
+    <string name="zap_dialog_positive">Reset selected items</string>
+    <string name="zap_dialog_message">Reset?\nYou might lose access to content.</string>
+    <string name="zap_dialog_negative">Cancel</string>
+    <string-array name="zap_dialog_reset_items">
+        <item>GeckoView profile</item>
+        <item>P2P subscriptions</item>
+        <item>P2P bundles</item>
+        <item>P2P certificate</item>
+    </string-array>
+
+    <string name="shutdown_dialog_message">Exit %s?</string>
+    <string name="shutdown_dialog_positive">Yes</string>
+    <string name="shutdown_dialog_negative">No</string>
+
+    <string name="p2p_backgrounded_no_wifihost">The app is in the background. It will not be able to become a Wifi P2P host.</string>
+    <string name="p2p_status_notification">Appelflap P2P Status</string>
+    <string name="conductor_service_notification_title_message">P2P connector service running</string>
+    <string name="conductor_needs_help">P2P connector needs your help!</string>
+    <string name="conductor_leecher_no_space">No space to store cache bundle from peer :-(</string>
+
+    <string name="wifi_not_associated">WiFi not connected</string>
+
+    <string name="errorpage_header">Something went wrong :-(</string>
+    <string name="errorpage_try_again">Click here to try again.</string>
+    <string name="gecko_engine_restart">Restarting Appelflap…</string>
+    <string name="download_openwith_choosermessage">Open %s with:</string>
+    <string name="download_share_choosermessage">Share %s with:</string>
+    <string name="download_dialog_overwrite_question">Do you want to replace %s?</string>
+    <string name="download_dialog_overwrite_explainer">You already have this file, but it may be an older version.</string>
+    <string name="download_dialog_overwrite_affirmative">Replace</string>
+    <string name="download_dialog_overwrite_negative">Keep</string>
+    <string name="wrapper_not_running">The browser activity is not running :-/</string>
+    <string name="apk_upgrade_available">An application update has been downloaded.</string>
+    <string name="install_tap_positive">Tap to install</string>
+    <string name="downloading_apk_upgrade">Downloading APK upgrade</string>
+    <string name="downloading_apk_brought_to_you_by">from %s</string>
+
+</resources>

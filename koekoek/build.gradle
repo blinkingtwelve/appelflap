@@ -1,0 +1,29 @@
+apply plugin: 'java-library'
+apply plugin: 'kotlin'
+apply plugin: 'kotlinx-serialization'
+
+buildscript {
+    repositories { jcenter() }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
+    }
+}
+
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlinx:kotlinx-serialization-json:$kotlin_serialization_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+
+    implementation 'org.xerial:sqlite-jdbc:3.34.0'  // not used when running through Android
+    implementation 'net.iharder:base64:2.3.9'  // for base64 stuff, as funnily enough, nothing's available in the java stdlib on older Android versions
+    implementation 'commons-cli:commons-cli:1.4'
+    implementation 'org.bouncycastle:bcpkix-jdk15to18:1.68'
+
+    implementation project(path: ':kitchensink')
+}

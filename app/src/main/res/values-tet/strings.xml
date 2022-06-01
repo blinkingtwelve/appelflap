@@ -1,0 +1,17 @@
+<resources>
+    <string name="menu_reload_webview">star fila fali</string>
+    <string name="download_downloading">Foti %1$s</string>
+    <string name="download_already_downloading">Favor hein download %1$s</string>
+    <string name="download_retrying">Iha problema ho download %1$s. Sei download fali automatikamente.</string>
+    <string name="prompt_clear_field">Ha\'moos</string>
+    <string name="prompt_username">uzuáriu</string>
+    <string name="download_no_handler">La iha aplikasaun ba loke download tipu \"%1$s\".</string>
+    <string name="zap_dialog_positive">Hamoos</string>
+    <string name="zap_dialog_negative">Lae, nafatin</string>
+    <string name="download_no_downloadmanager">Ita-nia download manager la funsaun. Favor hadia ka kontaktu supporta.</string>
+    <string name="shutdown_dialog_message">Sai %s?</string>
+    <string name="shutdown_dialog_positive">Sin</string>
+    <string name="shutdown_dialog_negative">Lae</string>
+    <string name="download_no_storage_permission">La iha permisaun ba halo download.</string>
+    <string name="prompt_password">seña</string>
+</resources>

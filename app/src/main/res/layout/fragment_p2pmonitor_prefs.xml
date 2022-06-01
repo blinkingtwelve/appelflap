@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="64dp"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
+
+    <ScrollView
+        android:id="@+id/prefs_scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="P2P stats collecting &amp; display" />
+
+            <EditText
+                android:id="@+id/stats_interval_enter"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="stats broadcast/recording interval (seconds). 0 disables."
+                android:imeActionLabel="Engage"
+                android:imeOptions="actionSend"
+                android:inputType="numberDecimal" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="★ Wrapped site URL. Enter an empty value to reset to defaults." />
+
+            <EditText
+                android:id="@+id/wrappedsiteurl"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="the wrapped site URL."
+                android:imeActionLabel="Engage"
+                android:imeOptions="actionSend"
+                android:inputType="textUri" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="★ App-navigable domains, comma-separated. Enter an empty value to reset to defaults." />
+
+            <EditText
+                android:id="@+id/ourdomains"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:hint="comma-separated domains to navigate within the wrapper"
+                android:imeActionLabel="Engage"
+                android:imeOptions="actionSend"
+                android:inputType="text" />
+
+            <TextView
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:text="★) Takes a GeckoView activity reboot to take effect." />
+
+        </LinearLayout>
+    </ScrollView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

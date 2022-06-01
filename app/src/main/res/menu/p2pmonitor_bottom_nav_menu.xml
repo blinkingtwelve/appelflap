@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_home_24dp"
+        android:title="flightcheck" />
+
+    <item
+        android:id="@+id/navigation_prefs"
+        android:icon="@drawable/ic_settings"
+        android:title="prefs" />
+
+    <item
+        android:id="@+id/navigation_status"
+        android:icon="@drawable/ic_dashboard_24dp"
+        android:title="status" />
+
+    <item
+        android:id="@+id/navigation_logs"
+        android:icon="@drawable/ic_logs_24dp"
+        android:title="logs" />
+</menu>

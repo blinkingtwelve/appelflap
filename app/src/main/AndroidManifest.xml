@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="org.nontrivialpursuit.appelflap">
+
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <uses-feature
+        android:name="android.hardware.wifi.direct"
+        android:required="false" />
+
+    <application
+        android:name=".Appelflap"
+        android:allowBackup="false"
+        android:extractNativeLibs="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/WEBWRAP_TITLE"
+        android:usesCleartextTraffic="true"
+        tools:remove="android:appComponentFactory"
+        tools:targetApi="m">
+        <!-- tools:remove="android:appComponentFactory" per https://stackoverflow.com/a/65980047 -->
+        <meta-data
+            android:name="io.sentry.ndk.enable"
+            android:value="false" />
+        <meta-data
+            android:name="io.sentry.dsn"
+            android:value="@string/SENTRY_DSN" />
+
+        <receiver
+            android:name=".webpushpoll.BootReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <service
+            android:name=".webpushpoll.PollService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <service android:name=".peddlenet.ConductorService" />
+
+        <activity
+            android:name=".webwrap.GeckoWrap"
+            android:alwaysRetainTaskState="true"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/WEBWRAP_TITLE"
+            android:launchMode="singleTask"
+            android:noHistory="false"
+            android:taskAffinity=".GeckoWrap"
+            android:theme="@style/android:Theme.Holo.Light"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".webwrap.SupportOps"
+            android:icon="@mipmap/ic_launcher_paddle"
+            android:label="@string/SUPPORTAPP_TITLE"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".p2pmonitor.P2PMonitor"
+            android:enabled="@string/P2P_MONITOR_ENABLED"
+            android:icon="@mipmap/ic_launcher_p2pmonitor"
+            android:label="Appelflap P2P Monitor"
+            android:theme="@style/Theme.AppCompat.Light">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".relaunch.Trampoline"
+            android:exported="false"
+            android:launchMode="singleTask"
+            android:process=":RelaunchTrampoline"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+
+        <activity
+            android:name=".PermissionPlease"
+            android:theme="@style/Theme.AppCompat.DayNight.NoActionBar" />
+
+        <activity
+            android:name=".BundlefileOpener"
+            android:label="Appelflap Bundle Opener"
+            android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="android.intent.action.VIEW" />
+                <data android:scheme="file" />
+                <data android:scheme="content" />
+                <data android:host="*" />
+                <data android:mimeType="*/*" />
+                <data android:pathPattern="/.*\\.flap" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name=".p2pmonitor.LogFileProvider"
+            android:authorities="@string/P2P_LOGFILEPROVIDER_AUTHORITY"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/sharepaths_p2pmonitor" />
+        </provider>
+
+        <provider
+            android:name=".webwrap.DownloadsFileProvider"
+            android:authorities="@string/DOWNLOADS_FILEPROVIDER_AUTHORITY"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/sharepaths_downloads" />
+        </provider>
+
+        <provider
+            android:name=".webwrap.TempFileProvider"
+            android:authorities="@string/TEMPFILE_FILEPROVIDER_AUTHORITY"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/sharepaths_tempfiles" />
+        </provider>
+
+        <provider
+            android:name=".peddlenet.ApkUpgradeFileProvider"
+            android:authorities="@string/APKUPGRADE_FILEPROVIDER_AUTHORITY"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/sharepaths_apkupgrades" />
+        </provider>
+
+
+    </application>
+
+</manifest>

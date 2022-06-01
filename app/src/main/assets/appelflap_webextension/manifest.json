@@ -1,0 +1,21 @@
+{
+  "manifest_version": 2,
+  "name": "appelflap",
+  "version": "1.0",
+  "description": "webapp <-> Appelflap bridge",
+  "permissions": [
+    "nativeMessaging",
+    "nativeMessagingFromContent",
+    "geckoViewAddons",
+    "<all_urls>"
+  ],
+  "web_accessible_resources": [
+    "serverinfo.json",
+    "peerid.json"
+  ],
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "appelflap@appelflap.appelflap"
+    }
+  }
+}

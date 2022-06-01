@@ -1,0 +1,51 @@
+diff --git a/mobile/android/modules/geckoview/GeckoViewWebExtension.jsm b/mobile/android/modules/geckoview/GeckoViewWebExtension.jsm
+--- a/mobile/android/modules/geckoview/GeckoViewWebExtension.jsm
++++ b/mobile/android/modules/geckoview/GeckoViewWebExtension.jsm
+@@ -849,17 +849,18 @@ var GeckoViewWebExtension = {
+       return null;
+     }
+ 
+-    if (uri.scheme !== "resource" || uri.host !== "android") {
+-      aCallback.onError(`Only resource://android/... URIs are allowed.`);
+-      return null;
+-    }
+-
+-    if (uri.fileName !== "") {
+-      aCallback.onError(
+-        `This URI does not point to a folder. Note: folders URIs must end with a "/".`
+-      );
+-      return null;
+-    }
++    // // boerpatch: any old URI goes
++    // if (uri.scheme !== "resource" || uri.host !== "android") {
++    //   aCallback.onError(`Only resource://android/... URIs are allowed.`);
++    //   return null;
++    // }
++    //
++    // if (uri.fileName !== "") {
++    //   aCallback.onError(
++    //     `This URI does not point to a folder. Note: folders URIs must end with a "/".`
++    //   );
++    //   return null;
++    // }
+ 
+     return uri;
+   },
+diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.jsm b/toolkit/mozapps/extensions/internal/XPIInstall.jsm
+--- a/toolkit/mozapps/extensions/internal/XPIInstall.jsm
++++ b/toolkit/mozapps/extensions/internal/XPIInstall.jsm
+@@ -4425,9 +4425,11 @@ var XPIInstall = {
+     // an extension (for localization).  It knows how to do this with
+     // jar: and file: URLs, so translate the provided base URL to
+     // something it can use.
+-    if (baseURL.scheme !== "resource") {
+-      throw new Error("Built-in addons must use resource: URLS");
+-    }
++    
++    // // boerpatch: allow file:// URIs
++    // if (baseURL.scheme !== "resource") {
++    //   throw new Error("Built-in addons must use resource: URLS");
++    // }
+ 
+     let pkg = builtinPackage(baseURL);
+     let addon = await loadManifest(pkg, XPIInternal.BuiltInLocation);
