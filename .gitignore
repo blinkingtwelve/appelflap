@@ -1,0 +1,15 @@
+*.iml
+.DS_Store
+.externalNativeBuild
+.gradle
+/.idea
+/app/build
+/app/gradle
+/build
+/captures
+/eekhoorn/gradle
+/eekhoorn_nop/.idea
+/eekhoorn_nop/gradle
+/eekhoorn_nop/local.properties
+/local.properties
+/splits
