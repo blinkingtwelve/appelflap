@@ -54,9 +54,23 @@
         android:text=""
         android:textColor="#FFFFFF"
         android:textSize="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/text_peer_id"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_application_version" />
+
+    <TextView
+        android:id="@+id/text_peer_id"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/beroblue"
+        android:paddingLeft="10dp"
+        android:text=""
+        android:textColor="#FFFFFF"
+        android:textSize="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_appelflap_creds" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
