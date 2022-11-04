@@ -1,5 +1,9 @@
 package org.nontrivialpursuit.appelflap.webwrap;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
+import org.mozilla.geckoview.GeckoResult;
 import org.mozilla.geckoview.GeckoSession;
 
 class AutograntingPermissionDelegate implements GeckoSession.PermissionDelegate {
@@ -40,9 +44,10 @@ class AutograntingPermissionDelegate implements GeckoSession.PermissionDelegate 
         }
     }
 
+    @Nullable
     @Override
-    public void onContentPermissionRequest(final GeckoSession session, final String uri, final int type, final Callback callback) {
+    public GeckoResult<Integer> onContentPermissionRequest(@NonNull GeckoSession session, @NonNull ContentPermission perm) {
         // notifications, persistent storage, autoplay, ...
-        callback.grant();
+        return GeckoResult.fromValue(ContentPermission.VALUE_ALLOW);
     }
 }

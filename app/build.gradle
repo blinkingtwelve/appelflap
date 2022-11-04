@@ -171,7 +171,7 @@ dependencies {
        To use other GeckoView libraries, you'll need to switch the maven repo definitions.
        For that, see the example for locally built GeckoView at the top of this file, and the main build.gradle.
     */
-    implementation "org.mozilla.geckoview:geckoview-default:89.0.20210616152425-20210616.165243-1"
+    implementation "org.mozilla.geckoview:geckoview-default-omni:107.0.20221027175448-20221027.085515-1"
 
     implementation 'io.sentry:sentry-android:4.3.0'
     implementation 'io.github.rybalkinsd:kohttp:0.12.0'

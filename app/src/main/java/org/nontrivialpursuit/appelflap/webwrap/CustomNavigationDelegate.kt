@@ -23,7 +23,7 @@ internal class CustomNavigationDelegate(private val geckoWrap: GeckoWrap) : Navi
     var canWeGoBack = false
         private set
 
-    override fun onLocationChange(session: GeckoSession, url: String?) {
+    override fun onLocationChange(session: GeckoSession, url: String?, perms: List<GeckoSession.PermissionDelegate.ContentPermission>) {
         currentUri = url
     }
 

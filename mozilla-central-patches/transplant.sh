@@ -9,7 +9,7 @@ read
 UPSTREAM_BUILD=$(fd 'geckoview-.*\.aar$' ~/.gradle/caches/modules-2 -E 'geckoview-default' | fzf --keep-right)
 echo "Press Enter to pick our build"
 read
-OUR_BUILD=$(fd 'geckoview-.*\.aar$' ~/devschuur/mozilla-central/objdir-frontend/gradle/build/mobile/android/geckoview/maven/org/mozilla/geckoview/geckoview-default | fzf --keep-right)
+OUR_BUILD=$(fd 'geckoview-.*\.aar$' ~/devschuur/mozilla-central/objdir-frontend/gradle/maven/org/mozilla/geckoview/geckoview-default-omni | fzf --keep-right)
 MONGREL_TMPDIR=$(mktemp --directory --suffix=_mongrel --tmpdir=`dirname "${OUR_BUILD}"`)
 mkdir ${MONGREL_TMPDIR}/our_omni.ja
 cp --reflink=auto "${UPSTREAM_BUILD}" "${MONGREL_TMPDIR}"

@@ -1,44 +1,56 @@
+
+# HG changeset patch
+# User blinkingtwelve <blinkingtwelve@nontrivialpursuit.org>
+# Date 1666837721 -32400
+# Node ID 877b959707cd2ad5483210b173682df6ef3a6e67
+# Parent  50a2d35fa2324ea846a385390b18e0ab5d211fcc
+allow for rebooting
+
 diff --git a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 --- a/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
 +++ b/mobile/android/geckoview/src/main/java/org/mozilla/geckoview/GeckoRuntime.java
-@@ -182,9 +182,10 @@ public final class GeckoRuntime implemen
-         mAutocompleteStorageProxy = new Autocomplete.StorageProxy();
-         mProfilerController = new ProfilerController();
- 
--        if (sRuntime != null) {
--            throw new IllegalStateException("Only one GeckoRuntime instance is allowed");
--        }
-+//      boerpatch: overly alarmistic when we've actually killed the runtime
-+//        if (sRuntime != null) {
-+//            throw new IllegalStateException("Only one GeckoRuntime instance is allowed");
-+//        }
-         sRuntime = this;
+@@ -235,9 +235,10 @@ public final class GeckoRuntime implemen
+       mScreenChangeListener = null;
      }
  
-@@ -398,12 +399,14 @@ public final class GeckoRuntime implemen
+-    if (sRuntime != null) {
+-      throw new IllegalStateException("Only one GeckoRuntime instance is allowed");
+-    }
++    // boerpatch: overly alarmistic when we've actually killed the runtime
++    // if (sRuntime != null) {
++    //   throw new IllegalStateException("Only one GeckoRuntime instance is allowed");
++    // }
+     sRuntime = this;
+   }
  
-         if (!GeckoThread.init(info)) {
-             Log.w(LOGTAG, "init failed (could not initiate GeckoThread)");
--            return false;
-+            // boerpatch: overly pessimistic when we've actually killed the runtime
-+            // return false;
-         }
+@@ -450,13 +451,15 @@ public final class GeckoRuntime implemen
+     }
  
-         if (!GeckoThread.launch()) {
-             Log.w(LOGTAG, "init failed (GeckoThread already launched)");
--            return false;
-+            // boerpatch: overly pessimistic when we've actually killed the runtime
-+            // return false;
-         }
+     if (!GeckoThread.init(info)) {
+-      Log.w(LOGTAG, "init failed (could not initiate GeckoThread)");
+-      return false;
++      // Log.w(LOGTAG, "init failed (could not initiate GeckoThread)");
++      // boerpatch: overly pessimistic when we've actually killed the runtime
++      // return false;
+     }
  
-         mSettings = settings;
-@@ -516,7 +519,8 @@ public final class GeckoRuntime implemen
-         runtime.attachTo(context);
+     if (!GeckoThread.launch()) {
+-      Log.w(LOGTAG, "init failed (GeckoThread already launched)");
+-      return false;
++      // Log.w(LOGTAG, "init failed (GeckoThread already launched)");
++      // boerpatch: overly pessimistic when we've actually killed the runtime
++      // return false;
+     }
  
-         if (!runtime.init(context, settings)) {
--            throw new IllegalStateException("Failed to initialize GeckoRuntime");
-+          // boerpatch: overly alarmistic when we've actually killed the runtime
-+          // throw new IllegalStateException("Failed to initialize GeckoRuntime");
-         }
+     mSettings = settings;
+@@ -574,7 +577,8 @@ public final class GeckoRuntime implemen
+     runtime.attachTo(context);
  
-         return runtime;
+     if (!runtime.init(context, settings)) {
+-      throw new IllegalStateException("Failed to initialize GeckoRuntime");
++      // boerpatch: overly alarmistic when we've actually killed the runtime
++      // throw new IllegalStateException("Failed to initialize GeckoRuntime");
+     }
+ 
+     context.registerComponentCallbacks(runtime.mMemoryController);
+

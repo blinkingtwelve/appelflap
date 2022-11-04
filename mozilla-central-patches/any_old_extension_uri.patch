@@ -1,7 +1,15 @@
+
+# HG changeset patch
+# User blinkingtwelve <blinkingtwelve@nontrivialpursuit.org>
+# Date 1666837764 -32400
+# Node ID 355ad2018b21142dbe4d4d03278d854671b6d491
+# Parent  877b959707cd2ad5483210b173682df6ef3a6e67
+extensions: allow file-URIs
+
 diff --git a/mobile/android/modules/geckoview/GeckoViewWebExtension.jsm b/mobile/android/modules/geckoview/GeckoViewWebExtension.jsm
 --- a/mobile/android/modules/geckoview/GeckoViewWebExtension.jsm
 +++ b/mobile/android/modules/geckoview/GeckoViewWebExtension.jsm
-@@ -849,17 +849,18 @@ var GeckoViewWebExtension = {
+@@ -853,17 +853,18 @@ var GeckoViewWebExtension = {
        return null;
      }
  
@@ -34,7 +42,7 @@ diff --git a/mobile/android/modules/geckoview/GeckoViewWebExtension.jsm b/mobile
 diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.jsm b/toolkit/mozapps/extensions/internal/XPIInstall.jsm
 --- a/toolkit/mozapps/extensions/internal/XPIInstall.jsm
 +++ b/toolkit/mozapps/extensions/internal/XPIInstall.jsm
-@@ -4425,9 +4425,11 @@ var XPIInstall = {
+@@ -4454,9 +4454,11 @@ var XPIInstall = {
      // an extension (for localization).  It knows how to do this with
      // jar: and file: URLs, so translate the provided base URL to
      // something it can use.
@@ -48,4 +56,5 @@ diff --git a/toolkit/mozapps/extensions/internal/XPIInstall.jsm b/toolkit/mozapp
 +    // }
  
      let pkg = builtinPackage(baseURL);
-     let addon = await loadManifest(pkg, XPIInternal.BuiltInLocation);
+     let addon = await loadManifest(pkg, lazy.XPIInternal.BuiltInLocation);
+
