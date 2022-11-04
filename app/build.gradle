@@ -4,7 +4,7 @@ apply plugin: 'kotlinx-serialization'
 
 buildscript {
     ext.androidx_navigation_version = "2.3.5"
-    repositories { jcenter() }
+    repositories { mavenCentral() }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
@@ -44,8 +44,8 @@ android {
     lintOptions {
         checkReleaseBuilds false
     }
-    compileSdkVersion 29
-    buildToolsVersion '30.0.3'
+    compileSdk 29
+    buildToolsVersion '31.0.0'
     defaultConfig {
         minSdkVersion 23  // Android 6
         targetSdkVersion 29 // < 23 allows manifest perms to be autogranted to system app
@@ -130,7 +130,7 @@ android {
             buildConfigField "int", "WEBPUSH_POLL_INTERVAL_QTR", '0'  // in units of 15 minutes, 0 disables it
         }
     }
-    ndkVersion '21.3.6528147'
+    ndkVersion '23.0.7599858'
     dependenciesInfo {
         includeInApk false
         includeInBundle false

@@ -3,7 +3,7 @@ apply plugin: 'kotlin'
 apply plugin: 'kotlinx-serialization'
 
 buildscript {
-    repositories { jcenter() }
+    repositories { mavenCentral() }
 
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlin_version"
