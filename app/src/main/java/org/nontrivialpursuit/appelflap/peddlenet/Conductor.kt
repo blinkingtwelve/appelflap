@@ -154,7 +154,7 @@ class Conductor private constructor(
             when (intent.action) {
                 WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION -> {
                     val old_status = current_p2p_device?.status
-                    current_p2p_device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE) as WifiP2pDevice
+                    current_p2p_device = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_DEVICE) as WifiP2pDevice?
                     if (current_p2p_device!!.status != old_status) {
                         log.d(
                             "device status changed: ${P2P_DEVICE_STATUS[old_status]} -> ${P2P_DEVICE_STATUS[current_p2p_device?.status]}"
@@ -194,8 +194,8 @@ class Conductor private constructor(
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
                 WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION -> {
-                    val p2pinfo: WifiP2pInfo = intent.getParcelableExtra<WifiP2pInfo>(WifiP2pManager.EXTRA_WIFI_P2P_INFO)
-                    val networkinfo: NetworkInfo = intent.getParcelableExtra<NetworkInfo>(WifiP2pManager.EXTRA_NETWORK_INFO)
+                    val p2pinfo: WifiP2pInfo = intent.getParcelableExtra<WifiP2pInfo>(WifiP2pManager.EXTRA_WIFI_P2P_INFO)!!
+                    val networkinfo: NetworkInfo = intent.getParcelableExtra<NetworkInfo>(WifiP2pManager.EXTRA_NETWORK_INFO)!!
                     val groupinfo: WifiP2pGroup? = intent.getParcelableExtra<WifiP2pGroup>(WifiP2pManager.EXTRA_WIFI_P2P_GROUP)
                     // log.d("p2pinfo:\n${p2pinfo}\nnetworkinfo:\n${networkinfo}\ngroupinfo:${groupinfo}")
                     current_p2pinfo = p2pinfo

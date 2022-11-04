@@ -95,8 +95,8 @@ class p2pClient(
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION -> {
-                val p2pinfo: WifiP2pInfo? = intent.getParcelableExtra<WifiP2pInfo>(WifiP2pManager.EXTRA_WIFI_P2P_INFO)
-                val networkinfo: NetworkInfo = intent.getParcelableExtra<NetworkInfo>(WifiP2pManager.EXTRA_NETWORK_INFO)
+                val p2pinfo: WifiP2pInfo = intent.getParcelableExtra<WifiP2pInfo>(WifiP2pManager.EXTRA_WIFI_P2P_INFO)!!
+                val networkinfo: NetworkInfo = intent.getParcelableExtra<NetworkInfo>(WifiP2pManager.EXTRA_NETWORK_INFO)!!
                 val groupinfo: WifiP2pGroup? = intent.getParcelableExtra<WifiP2pGroup>(WifiP2pManager.EXTRA_WIFI_P2P_GROUP)
                 log.d("Connection changed event: p2pinfo:\n${p2pinfo}\nnetworkinfo:\n${networkinfo}\ngroupinfo:${groupinfo}")
                 p2pinfo?.also {

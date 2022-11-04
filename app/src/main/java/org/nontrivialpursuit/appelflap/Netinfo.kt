@@ -33,7 +33,7 @@ fun getAPmodeIPv4Address(context: Context): Inet4Address? {
     // returns null if there are multiple candidates matching the criteria
     val cman = context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     val non_ap_netdevnames = cman.allNetworks.mapNotNull {
-        cman.getLinkProperties(it).interfaceName
+        cman.getLinkProperties(it)?.interfaceName
     }.toSet()
     val wlan_ifs = NetworkInterface.getNetworkInterfaces().toList().filter {
         !it.isLoopback && !it.isPointToPoint && !it.isVirtual && it.isUp && it.supportsMulticast() && it.name !in non_ap_netdevnames && it.name.matches(

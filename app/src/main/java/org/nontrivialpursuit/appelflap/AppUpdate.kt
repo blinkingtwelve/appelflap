@@ -120,7 +120,7 @@ class AppUpdate private constructor(val context: Context) {
     fun verify_apk_update(apkfile: File): Pair<Boolean, Int> {
         val candidate_pkginfo: PackageInfo = context.packageManager.getPackageArchiveInfo(
             apkfile.path, SIGS_PLEASE_FLAG
-        )
+        )!!
         if (candidate_pkginfo.versionCode <= BuildConfig.VERSION_CODE || candidate_pkginfo.packageName != BuildConfig.APPLICATION_ID) return false to 0
         if (Build.VERSION.SDK_INT >= 24) {
             if (candidate_pkginfo.applicationInfo.minSdkVersion > Build.VERSION.SDK_INT) return false to 0
