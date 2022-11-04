@@ -75,7 +75,7 @@ android {
             versionNameSuffix '-debug'
             resValue "string", "SENTRY_DSN", ""
             resValue "string", "P2P_MONITOR_ENABLED", "true"
-            isDefault = true
+            isDefault true
         }
     }
     compileOptions {
