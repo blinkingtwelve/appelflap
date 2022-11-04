@@ -5,9 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.TextView
 import android.widget.Toast
 import org.nontrivialpursuit.appelflap.Appelflap
 import org.nontrivialpursuit.appelflap.R
+import org.nontrivialpursuit.appelflap.getWifiDigest
 
 class SupportOps : AppCompatActivity() {
 
@@ -15,6 +17,19 @@ class SupportOps : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_support_ops)
         supportActionBar?.setDisplayShowTitleEnabled(false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val credbox: TextView = findViewById(R.id.text_appelflap_creds)
+        credbox.text = createUrl()
+    }
+
+    fun createUrl(): String {
+        val app = Appelflap.get(applicationContext)
+        return app.geckoRuntimeManager?.let {
+            "http://${it.eekhoorn.credentials.first}:${it.eekhoorn.credentials.second}@${getWifiDigest(this).ipaddress}:${it.eekhoorn.get_portno()}"
+        } ?: "Browser engine is not running."
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
