@@ -53,7 +53,7 @@ fun getWifiDigest(context: Context): WifiDigest {
             ?.let { it as Boolean? }
         val apmode_ip = in_apmode.takeIf { it == true }.let { getAPmodeIPv4Address(context) }?.toInt()
 
-        val ip = it.ipAddress.takeIf { it > 0 } ?: apmode_ip
+        val ip = it.ipAddress.takeIf { it !=0 } ?: apmode_ip
         WifiDigest(
             when (in_apmode) {
                 true -> "AP_MODE"
