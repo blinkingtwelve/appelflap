@@ -1,6 +1,6 @@
 package org.nontrivialpursuit.ingeblikt
 
-const val DUMPMETA_VERSION = 3
+const val DUMPMETA_VERSION = 4
 const val BUNDLE_DUMP_FILENAME_EXTENSION = "flap"
 const val BUNDLE_DUMP_FILENAME = "dump.${BUNDLE_DUMP_FILENAME_EXTENSION}"
 const val BUNDLE_META_FILENAME = "descriptor.json"

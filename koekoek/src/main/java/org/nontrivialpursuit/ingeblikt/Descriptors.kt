@@ -288,9 +288,22 @@ data class ServiceworkerDescriptor(
         return stanza[8].toLong()
     }
 
+    fun navigation_preload_state_enabled(): Int {
+        return Integer.parseInt(stanza[9])
+    }
+
+    fun navigation_preload_state_header(): Boolean {
+        return when (stanza[10]) {
+            "true" -> true
+            "false" -> false
+            else -> throw RuntimeException("Not booleanable: ${stanza[10]}")
+        }
+    }
+
     fun isValid(): Boolean {
         if (version != SERVICEWORKER_REGISTRATIONS_FORMAT_VERSION) return false
-        if (stanza.size != 9) return false
+        // version 9 has 11 stanzas
+        if (stanza.size != 11) return false
         try {
             scope()
             url()
@@ -299,6 +312,9 @@ data class ServiceworkerDescriptor(
             ts_install()
             ts_activated()
             ts_updated()
+            // Stanzas added in version 9
+            navigation_preload_state_enabled()
+            navigation_preload_state_header()
         } catch (e: Exception) {
             return false
         }
