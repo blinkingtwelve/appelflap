@@ -33,9 +33,11 @@ class Leecher(private val conductor: Conductor) : ServiceHandler {
     fun fetch_bundle(peer: BonjourPeer, bundledesc: BundleDescriptor): Boolean {
         conductor.koekoeksNest.also { kkn ->
             val bundle_url = "${peer.url()}${PUBLICATIONS_PATH}/${bundledesc.url_identity()}"
-            val resp = httpGet(pünktlich_httpclient) {
-                url(bundle_url)
-            }
+            val resp = kotlin.runCatching {
+                httpGet(pünktlich_httpclient) {
+                    url(bundle_url)
+                }
+            }.getOrNull() ?: return false
             if (resp.code() == 200) {
                 val expected_size = resp.header("Content-Length")?.let { it.toLongOrNull() } ?: return false
                 if (expected_size > MAX_BUNDLE_FETCH_SIZE) {
@@ -54,8 +56,7 @@ class Leecher(private val conductor: Conductor) : ServiceHandler {
                         kkn.addBundle(it, expected_size, bundledesc)
                     } ?: throw RuntimeException("No response body")
                 }.exceptionOrNull()?.also {
-                    log.w("Indelible bundle ${bundledesc} from ${bundle_url}: ${it.message}")
-                    // TODO: disturbance mitigation: blocklist this peer (for distributing faulty bundles)? Blocklist the signer?
+                    log.w("Indelible bundle ${bundledesc} from ${bundle_url}: ${it.message}") // TODO: disturbance mitigation: blocklist this peer (for distributing faulty bundles)? Blocklist the signer?
                     return false
                 }
                 conductor.leech_p2p_last_download_at = SystemClock.elapsedRealtime()
