@@ -31,7 +31,7 @@ class Leecher(private val conductor: Conductor) : ServiceHandler {
     }
 
     fun fetch_bundle(peer: BonjourPeer, bundledesc: BundleDescriptor): Boolean {
-        conductor.koekoeksNest?.also { kkn ->
+        conductor.koekoeksNest.also { kkn ->
             val bundle_url = "${peer.url()}${PUBLICATIONS_PATH}/${bundledesc.url_identity()}"
             val resp = httpGet(pünktlich_httpclient) {
                 url(bundle_url)
