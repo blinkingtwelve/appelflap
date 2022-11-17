@@ -209,9 +209,9 @@ class KoekoeksNest(
         try {
             subscriptions_mutex.acquire(mutex_permits)
             return kotlin.runCatching {
-                Json.decodeFromString(
-                    Subscriptions.serializer(), subscriptionsRegistryFile.reader(JSON_SERIALIZATION_CHARSET).readText()
-                )
+                Json.decodeFromString(Subscriptions.serializer(), subscriptionsRegistryFile.reader(JSON_SERIALIZATION_CHARSET).use {
+                    it.readText()
+                })
             }.getOrNull() ?: Subscriptions(HashMap())
         } finally {
             subscriptions_mutex.release(mutex_permits)

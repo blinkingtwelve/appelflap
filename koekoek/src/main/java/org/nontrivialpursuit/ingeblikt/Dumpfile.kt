@@ -146,14 +146,18 @@ fun packup(
                 ZipEntry("${i}.json"), Json.encodeToString(it).toByteArray(Charsets.UTF_8)
             )
             it.request_morguepath(morgue_basepath)?.also {
-                chainZipper.putNextEntry(
-                    ZipEntry("${i}.${REQUEST_BODY_ENTRY_NAME}"), BufferedInputStream(it.inputStream())
-                )
+                it.inputStream().use {
+                    chainZipper.putNextEntry(
+                        ZipEntry("${i}.${REQUEST_BODY_ENTRY_NAME}"), BufferedInputStream(it)
+                    )
+                }
             }
             it.response_morguepath(morgue_basepath)?.also {
-                chainZipper.putNextEntry(
-                    ZipEntry("${i}.${RESPONSE_BODY_ENTRY_NAME}"), BufferedInputStream(it.inputStream())
-                )
+                it.inputStream().use {
+                    chainZipper.putNextEntry(
+                        ZipEntry("${i}.${RESPONSE_BODY_ENTRY_NAME}"), BufferedInputStream(it)
+                    )
+                }
             }
         } catch (e: FileNotFoundException) {
             throw DanglingBodyFileReferenceException(e.message ?: "")

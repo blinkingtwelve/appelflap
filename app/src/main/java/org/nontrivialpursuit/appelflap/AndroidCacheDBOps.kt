@@ -315,13 +315,15 @@ class AndroidCacheDBOps : CacheDBOps {
                     "SELECT entry_id, url FROM response_url_list WHERE entry_id IN (SELECT id FROM entries WHERE cache_id = ${cache_id}) ORDER BY entry_id, url",
                     null
                 ).let {
-                    val the_map = HashMap<Int, ArrayList<String>>()
-                    while (it.moveToNext()) {
-                        val entry_id = it.getInt("entry_id")
-                        val the_list = the_map.get(entry_id) ?: ArrayList<String>()
-                        the_map[entry_id] = the_list.also { listy -> listy.add(it.getString("url")) }
+                    it.use {
+                        val the_map = HashMap<Int, ArrayList<String>>()
+                        while (it.moveToNext()) {
+                            val entry_id = it.getInt("entry_id")
+                            val the_list = the_map.get(entry_id) ?: ArrayList<String>()
+                            the_map[entry_id] = the_list.also { listy -> listy.add(it.getString("url")) }
+                        }
+                        return@let the_map
                     }
-                    return@let the_map
                 }
 
                 val request_headers_map = conn.rawQuery(
@@ -345,12 +347,14 @@ class AndroidCacheDBOps : CacheDBOps {
                     null
                 ).let {
                     val the_map = HashMap<Int, ArrayList<Pair<String, String>>>()
-                    while (it.moveToNext()) {
-                        val entry_id = it.getInt("entry_id")
-                        val headername = it.getString("name")
-                        if (!(headerFilter?.test_responseheader(headername) ?: false)) {
-                            val the_list = the_map.get(entry_id) ?: ArrayList<Pair<String, String>>()
-                            the_map[entry_id] = the_list.also { listy -> listy.add(headername to it.getString("value")) }
+                    it.use {
+                        while (it.moveToNext()) {
+                            val entry_id = it.getInt("entry_id")
+                            val headername = it.getString("name")
+                            if (!(headerFilter?.test_responseheader(headername) ?: false)) {
+                                val the_list = the_map.get(entry_id) ?: ArrayList<Pair<String, String>>()
+                                the_map[entry_id] = the_list.also { listy -> listy.add(headername to it.getString("value")) }
+                            }
                         }
                     }
                     return@let the_map

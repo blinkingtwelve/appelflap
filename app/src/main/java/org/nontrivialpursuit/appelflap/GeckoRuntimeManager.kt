@@ -312,7 +312,9 @@ class GeckoRuntimeManager private constructor(
         val mozdir = File(application.filesDir, MOZ_FILES)
         return File(mozdir, PROFILES_INI).takeIf { it.isFile and it.canRead() }?.let { profiles_ini ->
             Properties().let { props ->
-                props.load(FileInputStream(profiles_ini))
+                profiles_ini.inputStream().use {
+                    props.load(it)
+                }
                 File(mozdir, props.getProperty("Path")).takeIf { it.exists() && it.isDirectory }
             }
         }
