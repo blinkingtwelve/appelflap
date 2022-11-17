@@ -92,13 +92,11 @@ class AndroidCacheDBOps : CacheDBOps {
         val body_gc = HashSet<String>()  // delete these body files if everything else succeeds
         val existing_cache_id: Int? = if (overwrite) {
             val found_id = conn.rawQuery(
-                "SELECT cache_id FROM storage WHERE key = X'${gecko_encode(name).hexlify()}' AND namespace = ${namespace.ordinal}",
-                null
+                "SELECT cache_id FROM storage WHERE key = X'${gecko_encode(name).hexlify()}' AND namespace = ${namespace.ordinal}", null
             ).use {
                 return@use if (it.moveToFirst()) it.getInt(0) else null
             }
-            found_id?.also {
-                // clean it out any previous cache content. Except for security_info table which will be GC-ed out of band.
+            found_id?.also { // clean it out any previous cache content. Except for security_info table which will be GC-ed out of band.
                 for (tablename in listOf("response_url_list", "response_headers", "request_headers")) {
                     conn.execSQL("DELETE FROM ${tablename} WHERE entry_id IN (SELECT id FROM entries WHERE cache_id = ${it})")
                 }
@@ -223,7 +221,9 @@ class AndroidCacheDBOps : CacheDBOps {
             checkDbVersion(conn)
             try {
                 conn.beginTransaction()
-                val (cacheID, body_gc) = getCacheId(conn, rename_to ?: cacheDescriptor.name, cacheDescriptor.namespace, overwrite = overwrite)
+                val (cacheID, body_gc) = getCacheId(
+                    conn, rename_to ?: cacheDescriptor.name, cacheDescriptor.namespace, overwrite = overwrite
+                )
                 val remapped_securityInfoMap = injectSecurityInfoMap(conn, securityInfoMap)
                 entries.forEach {
                     val response_secinfo_id = it.response_security_info_id?.let { the_id ->
@@ -238,8 +238,7 @@ class AndroidCacheDBOps : CacheDBOps {
                         )
                     )  // we don't want to remove bodies we have been overwriting
                 }
-                updateSecurityInfoMapRefcounts(conn)
-                // GC bodies of any deleted entries
+                updateSecurityInfoMapRefcounts(conn) // GC bodies of any deleted entries
                 body_gc.map { cachedir.bodyfile_for_bodyid(it) }.forEach {  // throws when the body ID does not look as expected
                     it.delete()
                 }
@@ -252,7 +251,11 @@ class AndroidCacheDBOps : CacheDBOps {
 
 
     override fun extract_dbinfo(
-            profiledir: File, origin: String, cachename: String, namespace: CacheType, headerFilter: HeaderFilter?): Triple<CacheDescriptor, CacheSecurityInfoMap, List<CacheEntry>> {
+            profiledir: File,
+            origin: String,
+            cachename: String,
+            namespace: CacheType,
+            headerFilter: HeaderFilter?): Triple<CacheDescriptor, CacheSecurityInfoMap, List<CacheEntry>> {
         val dbfile = File(profiledir, dbpath_for_origin(origin))
         if (!dbfile.exists()) throw RuntimeException("Database file not found: ${dbfile}")
         dbfile.android_db(ro = true).use { conn ->

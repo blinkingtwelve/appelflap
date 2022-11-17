@@ -96,8 +96,7 @@ class KoekoeksNest(
                         bundledesc.cacheDescriptor.version
                     ), it.second.length(), it.second.lastModified()
                 )
-            } catch (e: SerializationException) {
-                // Unsavoury (corrupted, or non-compatible) bundle. Schedule for deletion.
+            } catch (e: SerializationException) { // Unsavoury (corrupted, or non-compatible) bundle. Schedule for deletion.
                 it.first.parentFile.renameTo(File(it.first.parent + EXPEL_SUFFIX))
                 return@map null
             }
@@ -118,25 +117,25 @@ class KoekoeksNest(
         serializeIdentityOperation(target.fs_identity()) {
             var tempdir: File? = null
             GCLock.runWith({
-                            try {
-                                tempdir = target.createIdentityTempdir().also {
-                                    val outstream = BufferedOutputStream(File(it, BUNDLE_DUMP_FILENAME).outputStream())
-                                    val descriptor = packup(dbOps, profile_dir, outstream, pkiOps, target, headerFilter)
-                                    File(it, BUNDLE_META_FILENAME).writeText(encodeToString(DumpDescriptor.serializer(), descriptor))
-                                    val bundle = descriptor.toBundleDescriptor()
-                                    val target_dir = bundle.getIdentityDir()
-                                    if (!it.renameTo(target_dir)) {
-                                        val expeldir = target.getExpelDir()
-                                        expeldir.deleteRecursively()
-                                        target_dir.renameTo(expeldir)
-                                        it.renameTo(target_dir)
-                                    }
-                                }
-                                do_collectionupdate_callbacks()
-                            } finally {
-                                tempdir?.deleteRecursively()
-                            }
-                        })
+                               try {
+                                   tempdir = target.createIdentityTempdir().also {
+                                       val outstream = BufferedOutputStream(File(it, BUNDLE_DUMP_FILENAME).outputStream())
+                                       val descriptor = packup(dbOps, profile_dir, outstream, pkiOps, target, headerFilter)
+                                       File(it, BUNDLE_META_FILENAME).writeText(encodeToString(DumpDescriptor.serializer(), descriptor))
+                                       val bundle = descriptor.toBundleDescriptor()
+                                       val target_dir = bundle.getIdentityDir()
+                                       if (!it.renameTo(target_dir)) {
+                                           val expeldir = target.getExpelDir()
+                                           expeldir.deleteRecursively()
+                                           target_dir.renameTo(expeldir)
+                                           it.renameTo(target_dir)
+                                       }
+                                   }
+                                   do_collectionupdate_callbacks()
+                               } finally {
+                                   tempdir?.deleteRecursively()
+                               }
+                           })
         }
     }
 
@@ -256,13 +255,20 @@ class KoekoeksNest(
         }
     }
 
-    fun saveSubscriptionRecord(bundle: BundleDescriptor, flags: Int, gc_permits: Int = 1, mutex_permits: Int = 0) {
-        // Use the subscriptions mutex to prevent the subscriptions from being modified behind our back while we are modifying them ourselves
+    fun saveSubscriptionRecord(
+            bundle: BundleDescriptor,
+            flags: Int,
+            gc_permits: Int = 1,
+            mutex_permits: Int = 0) { // Use the subscriptions mutex to prevent the subscriptions from being modified behind our back while we are modifying them ourselves
         subscriptions_mutex.runWith({
                                         saveSubscriptions(
-                                            getSubscriptions(mutex_permits = 0).bump_version(bundle.type, bundle.origin, bundle.name, bundle.version, flags),
-                                            mutex_permits = 0,
-                                            gc_permits = gc_permits
+                                            getSubscriptions(mutex_permits = 0).bump_version(
+                                                bundle.type,
+                                                bundle.origin,
+                                                bundle.name,
+                                                bundle.version,
+                                                flags
+                                            ), mutex_permits = 0, gc_permits = gc_permits
                                         )
                                     }, nb_permits = mutex_permits)
     }
