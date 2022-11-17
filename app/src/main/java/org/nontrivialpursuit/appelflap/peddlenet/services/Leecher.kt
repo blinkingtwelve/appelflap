@@ -46,7 +46,7 @@ class Leecher(private val conductor: Conductor) : ServiceHandler {
                     log.w("No space to store bundle of size ${expected_size}, url: ${bundle_url}")
                     Toast.makeText(
                         conductor.context, conductor.context.resources.getString(R.string.conductor_leecher_no_space), Toast.LENGTH_LONG
-                    )
+                    ).show()
                     return false
                 }
                 kotlin.runCatching {
