@@ -263,11 +263,7 @@ class KoekoeksNest(
         subscriptions_mutex.runWith({
                                         saveSubscriptions(
                                             getSubscriptions(mutex_permits = 0).bump_version(
-                                                bundle.type,
-                                                bundle.origin,
-                                                bundle.name,
-                                                bundle.version,
-                                                flags
+                                                bundle.type, bundle.origin, bundle.name, bundle.version, flags
                                             ), mutex_permits = 0, gc_permits = gc_permits
                                         )
                                     }, nb_permits = mutex_permits)
