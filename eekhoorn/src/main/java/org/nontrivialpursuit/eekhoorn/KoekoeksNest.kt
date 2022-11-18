@@ -130,6 +130,13 @@ class KoekoeksNest(
                                            target_dir.renameTo(expeldir)
                                            it.renameTo(target_dir)
                                        }
+                                       saveSubscriptionRecord(
+                                           bundle, flags = RECORD_INJECTED or RECORD_PUBLISHED, gc_permits = 0
+                                       )/*
+                                       Synchronously record this version as injected and published.
+                                       Since if we found this stuff in our cache, then we should keep the registry (subscriptions)
+                                       in sync so as to prevent 1) garbage collection 2) injection of the bundle we just packed up.
+                                       */
                                    }
                                    do_collectionupdate_callbacks()
                                } finally {
