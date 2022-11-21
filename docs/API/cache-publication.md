@@ -34,7 +34,7 @@ For the packed up bundle, Appelflap will update the [subscriptions](update-subsc
 ### Request
 
 ```
-PUT /appelflap/ingeblikt/publications/{type}/{web-origin}/{cache-name}/{version}?contentionstrategy=(NOOP|ENGINE_REBOOT|ENGINE_REBOOT_UPON_CONTENTION)
+PUT /appelflap/ingeblikt/publications/{type}/{web-origin}/{cache-name}/{version}?contentionstrategy=(NOOP|ENGINE_REBOOT|ENGINE_REBOOT_UPON_CONTENTION)&overwrite=true
 ```
 
 #### URL components
@@ -48,6 +48,7 @@ PUT /appelflap/ingeblikt/publications/{type}/{web-origin}/{cache-name}/{version}
   - `NOOP` - Don't do anything. If the cache state (as observable by Appelflap) is incoherent, a 503 error will be returned.
   - `ENGINE_REBOOT` - Shut down GeckoView (destroying the webapp context - this means an in-webapp caller will never see the response), pack up the settled/stable state, and relaunch GeckoView with its session state restored.
   - `ENGINE_REBOOT_UPON_CONTENTION` - Try reading the cache, only resorting to ENGINE_REBOOT behaviour if contention is taking place. This is the default.
+- `overwrite` - Optional query parameter for specifying whether to overwrite any pre-existing bundles. Unless `true`, no packup action will take place if the bundle indentity is already available from the bundle repository.
 
 #### Request headers
 - `Authorization` - see Authentication
@@ -59,7 +60,8 @@ Ignored.
 ### Response
 
 #### Response status
-- 200/201 on success
+- 201 on success, when the bundle is newly created
+- 200 on success, when the bundle already existed (packing up was skipped)
 - 409 when a packing action is already in progress for this cache
 - 400 when the version supplied is invalid
 - 401 when authentication has failed
