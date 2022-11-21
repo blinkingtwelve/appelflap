@@ -57,26 +57,39 @@ class PublicationHandler(contextPath: String, val eekhoorn: HttpEekhoorn) : Cont
                         target?.also {
                             val packupContentionStrategy = request.getParameter("contentionstrategy")
                                 ?.let { PackupContentionStrategy.valueOf(it) } ?: PackupContentionStrategy.ENGINE_REBOOT_UPON_CONTENTION
-                            when (packupContentionStrategy) {
-                                PackupContentionStrategy.NOOP -> {
-                                    try {
-                                        eekhoorn.koekoekBridge.serializeCache(it)
-                                    } catch (e: DanglingBodyFileReferenceException) {
-                                        base_response.sendErrorText(Response.SC_SERVICE_UNAVAILABLE, "Aborted due to contention: ${e.message}")
+                            val doOverWrite: Boolean = request.getParameter("overwrite") == "true"
+                            if (!doOverWrite and (bundle?.let{ eekhoorn.koekoekBridge.getDumpFile(it)?.exists() } ?: false)) {
+                                base_response.sendErrorText(
+                                    Response.SC_OK,
+                                    "Already created. Re-request with the 'overwrite=true' URL query parameter to repack and overwrite.\n"
+                                )
+                            } else {
+                                when (packupContentionStrategy) {
+                                    PackupContentionStrategy.NOOP -> {
+                                        try {
+                                            eekhoorn.koekoekBridge.serializeCache(it)
+                                            response.status = Response.SC_CREATED
+                                        } catch (e: DanglingBodyFileReferenceException) {
+                                            base_response.sendErrorText(
+                                                Response.SC_SERVICE_UNAVAILABLE, "Aborted due to contention: ${e.message}"
+                                            )
+                                        }
                                     }
-                                }
-                                PackupContentionStrategy.ENGINE_REBOOT_UPON_CONTENTION -> {
-                                    try {
-                                        eekhoorn.koekoekBridge.serializeCache(it)
-                                    } catch (e: DanglingBodyFileReferenceException) {
+                                    PackupContentionStrategy.ENGINE_REBOOT_UPON_CONTENTION -> {
+                                        try {
+                                            eekhoorn.koekoekBridge.serializeCache(it)
+                                            response.status = Response.SC_CREATED
+                                        } catch (e: DanglingBodyFileReferenceException) {
+                                            eekhoorn.appelflapBridge.runWithHibernatingGeckoSession(RebootMethod.ENGINE_REBOOT) {
+                                                eekhoorn.koekoekBridge.serializeCacheRetryOnMissingBodyfile(it)
+                                            }
+                                        }
+                                    }
+                                    PackupContentionStrategy.ENGINE_REBOOT -> {
                                         eekhoorn.appelflapBridge.runWithHibernatingGeckoSession(RebootMethod.ENGINE_REBOOT) {
                                             eekhoorn.koekoekBridge.serializeCacheRetryOnMissingBodyfile(it)
                                         }
-                                    }
-                                }
-                                PackupContentionStrategy.ENGINE_REBOOT -> {
-                                    eekhoorn.appelflapBridge.runWithHibernatingGeckoSession(RebootMethod.ENGINE_REBOOT) {
-                                        eekhoorn.koekoekBridge.serializeCacheRetryOnMissingBodyfile(it)
+                                        response.status = Response.SC_CREATED
                                     }
                                 }
                             }
