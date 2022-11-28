@@ -16,7 +16,7 @@ const val INGEBLIKT_PREFIX = "$API_PREFIX/ingeblikt"
 const val PKI_OPS_PATH = "$INGEBLIKT_PREFIX/certchain"
 const val INJECTION_LOCK_PATH = "$INGEBLIKT_PREFIX/injection-lock"
 const val PUBLICATIONS_PATH = "$INGEBLIKT_PREFIX/publications"
-const val DEBUG_TRICKS_PATH = "$INGEBLIKT_PREFIX/jeffreystube"
+const val DEBUG_TRICKS_PATH = "$INGEBLIKT_PREFIX/jefferiestube"
 const val SUBSCRIPTIONS_PATH = "$INGEBLIKT_PREFIX/subscriptions"
 
 val MD5_REGEX = Regex("^[a-z0-9]{32}$")

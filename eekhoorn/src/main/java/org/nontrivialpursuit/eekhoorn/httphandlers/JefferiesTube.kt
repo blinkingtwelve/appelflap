@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
 
 
-class JeffreysTube(
+class JefferiesTube(
         contextPath: String, val eekhoorn: HttpEekhoornInterface) : ContextHandler() {
     val log: Logger
 

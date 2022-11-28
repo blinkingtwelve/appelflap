@@ -68,7 +68,7 @@ class HttpEekhoorn(
                             AppelflapDownloadsHandler(DOWNLOADS_PREFIX, this),
                         ).let {
                             if (!DEBUG) it else it + listOf(
-                                JeffreysTube(
+                                JefferiesTube(
                                     DEBUG_TRICKS_PATH,
                                     this
                                 )
