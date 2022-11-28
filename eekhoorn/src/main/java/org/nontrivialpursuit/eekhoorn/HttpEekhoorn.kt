@@ -39,6 +39,7 @@ class HttpEekhoorn(
                 it.handlers = arrayOf<Handler>(
                     HandlerList().also {
                         it.handlers = arrayOf<Handler>(
+                            HttpLogger(),
                             CorsWideOpen(),
                             BasicAuthGuard(
                                 authedHeaderValue = credentials.third, free_to_access = listOf(

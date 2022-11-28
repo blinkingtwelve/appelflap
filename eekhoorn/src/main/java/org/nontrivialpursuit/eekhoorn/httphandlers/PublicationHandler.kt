@@ -47,7 +47,9 @@ class PublicationHandler(contextPath: String, val eekhoorn: HttpEekhoorn) : Cont
             target: String, baseRequest: Request, request: HttpServletRequest, response: HttpServletResponse) {
         val base_response: Response = HttpConnection.getCurrentConnection().httpChannel.response
         val pathcomponents = target.substring(1).split('/').filter { it.length > 0 }
-        val target = kotlin.runCatching { parse_path(pathcomponents) }.getOrNull()
+        val target = kotlin.runCatching { parse_path(pathcomponents) }.getOrNull().also {
+            it?.also { log.info("PUBLICATIONTARGET:", it.type, it.origin, it.name, it.version) }
+        }
         val bundle = runCatching { target?.toBundleDescriptor() }.getOrNull()
         baseRequest.isHandled = when (request.method to pathcomponents.size) {
 
@@ -58,7 +60,7 @@ class PublicationHandler(contextPath: String, val eekhoorn: HttpEekhoorn) : Cont
                             val packupContentionStrategy = request.getParameter("contentionstrategy")
                                 ?.let { PackupContentionStrategy.valueOf(it) } ?: PackupContentionStrategy.ENGINE_REBOOT_UPON_CONTENTION
                             val doOverWrite: Boolean = request.getParameter("overwrite") == "true"
-                            if (!doOverWrite and (bundle?.let{ eekhoorn.koekoekBridge.getDumpFile(it)?.exists() } ?: false)) {
+                            if (!doOverWrite and (bundle?.let { eekhoorn.koekoekBridge.getDumpFile(it)?.exists() } ?: false)) {
                                 base_response.sendErrorText(
                                     Response.SC_OK,
                                     "Already created. Re-request with the 'overwrite=true' URL query parameter to repack and overwrite.\n"
