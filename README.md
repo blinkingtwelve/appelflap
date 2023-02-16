@@ -2,7 +2,7 @@
 
 ## What
 
-A "kiosk mode" browser for a specific website of your choosing. It uses (and bundles) GeckoView, based on Firefox, as a browser component - rather than the more obvious choice of Webview (Android's built in browser component, based on Chrome). This gives us a stable and modern target even on old Android versions (7.0 and up are supported).
+A "kiosk mode" browser for a specific website of your choosing. It uses (and bundles) GeckoView, based on Firefox, as a browser component - rather than the more obvious choice of Webview (Android's built in browser component, based on Chrome). This gives us a stable and modern target even on old Android versions (8.0 and up are supported).
 
 Appelflap is also delicious apple pastry from the Netherlands. 
 

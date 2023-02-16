@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="org.nontrivialpursuit.appelflap">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -24,7 +24,6 @@
 
     <application
         android:name=".Appelflap"
-        android:allowBackup="false"
         android:extractNativeLibs="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/WEBWRAP_TITLE"
@@ -41,7 +40,8 @@
 
         <receiver
             android:name=".webpushpoll.BootReceiver"
-            android:enabled="true">
+            android:enabled="true"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
@@ -57,6 +57,7 @@
             android:name=".webwrap.GeckoWrap"
             android:alwaysRetainTaskState="true"
             android:configChanges="orientation|keyboardHidden|screenSize"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/WEBWRAP_TITLE"
             android:launchMode="singleTask"
@@ -72,6 +73,7 @@
 
         <activity
             android:name=".webwrap.SupportOps"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher_paddle"
             android:label="@string/SUPPORTAPP_TITLE"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
@@ -84,6 +86,7 @@
         <activity
             android:name=".p2pmonitor.P2PMonitor"
             android:enabled="@string/P2P_MONITOR_ENABLED"
+            android:exported="true"
             android:icon="@mipmap/ic_launcher_p2pmonitor"
             android:label="Appelflap P2P Monitor"
             android:theme="@style/Theme.AppCompat.Light">
@@ -106,6 +109,7 @@
 
         <activity
             android:name=".BundlefileOpener"
+            android:exported="true"
             android:label="Appelflap Bundle Opener"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
             <intent-filter>

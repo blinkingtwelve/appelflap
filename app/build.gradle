@@ -12,7 +12,7 @@ buildscript {
 }
 
 
-def getgitref() {
+static def getgitref() {
     def cmd = "git rev-parse --short HEAD"
     def proc = cmd.execute()
     proc.text.trim()
@@ -33,6 +33,7 @@ repositories {
 */
 
 android {
+    namespace 'org.nontrivialpursuit.appelflap'
     signingConfigs {
         demo {
             keyPassword ''
@@ -44,11 +45,11 @@ android {
     lintOptions {
         checkReleaseBuilds false
     }
-    compileSdk 29
-    buildToolsVersion '31.0.0'
+    compileSdk 31
+    buildToolsVersion '34.0.0 rc1'
     defaultConfig {
-        minSdkVersion 23  // Android 6
-        targetSdkVersion 29 // < 23 allows manifest perms to be autogranted to system app
+        minSdkVersion 26  // Android 8.0
+        targetSdkVersion 31
     }
     buildTypes {
         all {
@@ -88,6 +89,9 @@ android {
         // remove bloatiest things brought in by org.xerial:sqlite-jdbc
         // on Android, we don't use JDBC.
         exclude 'org/sqlite/native/**'
+        jniLibs {
+            useLegacyPackaging true
+        }
     }
 
     flavorDimensions "abi"
@@ -130,7 +134,7 @@ android {
             buildConfigField "int", "WEBPUSH_POLL_INTERVAL_QTR", '0'  // in units of 15 minutes, 0 disables it
         }
     }
-    ndkVersion '23.0.7599858'
+    ndkVersion '25.2.9519653'
     dependenciesInfo {
         includeInApk false
         includeInBundle false
