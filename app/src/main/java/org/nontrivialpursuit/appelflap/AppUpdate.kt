@@ -7,11 +7,10 @@ import android.content.pm.PackageManager
 import android.content.pm.Signature
 import android.os.Build
 import androidx.core.content.FileProvider
-import io.github.rybalkinsd.kohttp.client.defaultHttpClient
-import io.github.rybalkinsd.kohttp.client.fork
 import io.github.rybalkinsd.kohttp.dsl.httpGet
 import io.github.rybalkinsd.kohttp.ext.asStream
 import io.github.rybalkinsd.kohttp.ext.url
+import okhttp3.OkHttpClient
 import org.nontrivialpursuit.appelflap.peddlenet.*
 import org.nontrivialpursuit.eekhoorn.GIFT_PATH
 import org.nontrivialpursuit.ingeblikt.Lockchest
@@ -19,6 +18,7 @@ import org.nontrivialpursuit.ingeblikt.MEAL_SIZE
 import org.nontrivialpursuit.ingeblikt.ProgressCallbackDampener
 import org.nontrivialpursuit.ingeblikt.slurp
 import java.io.File
+import java.util.concurrent.TimeUnit
 import java.util.zip.ZipFile
 
 const val DOWNLOAD_FILENAME_PREFIX = "temp-"
@@ -38,10 +38,8 @@ class AppUpdate private constructor(val context: Context) {
     }
 
     val log = Logger(this)
-    val pünktlich_httpclient = defaultHttpClient.fork {
-        connectTimeout = PEER_CONNECT_TIMEOUT
-        readTimeout = PEER_READ_TIMEOUT
-    }
+    val pünktlich_httpclient = OkHttpClient.Builder().connectTimeout(PEER_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
+        .readTimeout(PEER_READ_TIMEOUT, TimeUnit.MILLISECONDS).build()
     val downloadDir = File(context.cacheDir, APKUPGRADE_DIR).apply { mkdirs() }
 
     val my_archiveinfo: PackageInfo = context.packageManager.getPackageInfo(
@@ -136,41 +134,44 @@ class AppUpdate private constructor(val context: Context) {
             httpGet(pünktlich_httpclient) {
                 url(apk_url)
             }
-        }.getOrNull()
-        if (resp?.code() == 200) {
-            val expected_size = resp.header("Content-Length")?.let { it.toLongOrNull() } ?: return false
-            if (expected_size > MAX_APK_FETCH_SIZE) {
-                log.w("APK size of ${expected_size} deemed to large, url: ${apk_url}")
-                return false
-            }
-            if (expected_size > downloadDir.freeSpace) {
-                log.w("No space to store APK of (expected) size ${expected_size}, url: ${apk_url}")
-                return false
-            }
-            kotlin.runCatching {
-                resp.asStream()?.use {
-                    val tmpfile = createTempFile("${DOWNLOAD_FILENAME_PREFIX}${peer.appversion}", ".apk", downloadDir)
-                    fun progress_callback(sofar: Long, max: Long?) {
-                        max?.also { themax ->
-                            notifier?.showProgress(sofar, themax)
-                        }
-                    }
-                    val dampener = ProgressCallbackDampener(every = 0x10000, ::progress_callback)
-                    tmpfile.outputStream().slurp(it, expected_size, progress_callback = dampener::progress_callback)
-                        .takeIf { it == MEAL_SIZE.RIGHT_ON }?.run {
-                        verify_apk_update(tmpfile).takeIf { it.first }?.also {
-                            tmpfile.renameTo(File(downloadDir, "${it.second}.apk"))  // For pickup by some other process
-                            cleanup()  // And this is why we're not re-entrant. We'd delete any in-progress downloads :-/
-                        }
-                    } ?: tmpfile.delete()
+        }.getOrNull() ?: return false
+        resp.use { resp ->
+            if (resp.code == 200) {
+                val expected_size = resp.header("Content-Length")?.let { it.toLongOrNull() } ?: return false
+                if (expected_size > MAX_APK_FETCH_SIZE) {
+                    log.w("APK size of ${expected_size} deemed to large, url: ${apk_url}")
+                    return false
                 }
-            }.exceptionOrNull()?.also {
-                log.w("Indelible APK from ${apk_url}: ${it.message}") // TODO: disturbance mitigation: blocklist this peer for a while?
+                if (expected_size > downloadDir.freeSpace) {
+                    log.w("No space to store APK of (expected) size ${expected_size}, url: ${apk_url}")
+                    return false
+                }
+                kotlin.runCatching {
+                    resp.asStream()?.use {
+                        val tmpfile = createTempFile("${DOWNLOAD_FILENAME_PREFIX}${peer.appversion}", ".apk", downloadDir)
+                        fun progress_callback(sofar: Long, max: Long?) {
+                            max?.also { themax ->
+                                notifier?.showProgress(sofar, themax)
+                            }
+                        }
+
+                        val dampener = ProgressCallbackDampener(every = 0x10000, ::progress_callback)
+                        tmpfile.outputStream().slurp(it, expected_size, progress_callback = dampener::progress_callback)
+                            .takeIf { it == MEAL_SIZE.RIGHT_ON }?.run {
+                                verify_apk_update(tmpfile).takeIf { it.first }?.also {
+                                    tmpfile.renameTo(File(downloadDir, "${it.second}.apk"))  // For pickup by some other process
+                                    cleanup()  // And this is why we're not re-entrant. We'd delete any in-progress downloads :-/
+                                }
+                            } ?: tmpfile.delete()
+                    }
+                }.exceptionOrNull()?.also {
+                    log.w("Indelible APK from ${apk_url}: ${it.message}") // TODO: disturbance mitigation: blocklist this peer for a while?
+                    notifier?.cancelProgress()
+                    return false
+                }
                 notifier?.cancelProgress()
-                return false
+                return true
             }
-            notifier?.cancelProgress()
-            return true
         }
         return false
     }
