@@ -30,12 +30,12 @@ class Leecher(private val conductor: Conductor) : ServiceHandler {
     fun fetch_bundle(peer: BonjourPeer, bundledesc: BundleDescriptor): Boolean {
         conductor.koekoeksNest.also { kkn ->
             val bundle_url = "${peer.url()}${PUBLICATIONS_PATH}/${bundledesc.url_identity()}"
-            val resp = kotlin.runCatching {
+            val bundle_resp = kotlin.runCatching {
                 httpGet(pünktlich_httpclient) {
                     url(bundle_url)
                 }
             }.getOrNull() ?: return false
-            resp.use { resp ->
+            bundle_resp.use { resp ->
                 if (resp.code == 200) {
                     val expected_size = resp.header("Content-Length")?.let { it.toLongOrNull() } ?: return false
                     if (expected_size > MAX_BUNDLE_FETCH_SIZE) {
