@@ -20,8 +20,8 @@ fun ScanResult.is_peer(): Boolean {
 
 fun ScanResult.to_APPeer(): APPeer? {
     return PEER_SSID_REX.matchEntire(this.SSID)?.let {
-        val (nodeid, statehash, hmac) = it.destructured
-        // TODO: verify using HMAC
+        val (nodeid, statehash, _) = it.destructured
+        // TODO: somewhat-verify that it's "one of ours" using the HMAC part.
         return APPeer(
             nodeid, Statehash(
                 statehash
@@ -44,7 +44,7 @@ class APScanner(
         )
         scan_trigger_handler = schedxecutor.scheduleWithFixedDelay(
             {
-                conductor.wifimanager.startScan()
+                @Suppress("DEPRECATION") conductor.wifimanager.startScan()
             }, 0L, APSCAN_POLL_INTERVAL, TimeUnit.SECONDS
         )
         return true
