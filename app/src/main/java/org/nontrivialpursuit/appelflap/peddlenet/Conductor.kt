@@ -81,7 +81,7 @@ class Conductor private constructor(
             // Hacky way of determining whether an IP address is on the p2p network: string-match it against the first 3 octets of the group owner address, assuming the p2p network is a /24
             current_p2p_network_selector = value?.let {
                 it.groupOwnerAddress?.let { addr ->
-                    addr.hostAddress.substringBeforeLast('.') + "."
+                    addr.hostAddress?.substringBeforeLast('.') + "."
                 }
             } ?: "nope"
         }
