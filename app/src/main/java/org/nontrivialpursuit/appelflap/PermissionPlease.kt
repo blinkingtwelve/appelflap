@@ -17,6 +17,7 @@ fun havePermission(context: Context, permission: String): Boolean {
     return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
 }
 
+@Suppress("DEPRECATION") // TODO Switch to getProtection() when our minSDK is >= 28
 fun askForPermissions(
         context: Context, desired_permissions: List<String>): Boolean {
     return desired_permissions.filter {
