@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.content.pm.Signature
 import android.os.Build
 import androidx.core.content.FileProvider
+import androidx.core.content.pm.PackageInfoCompat
 import io.github.rybalkinsd.kohttp.dsl.httpGet
 import io.github.rybalkinsd.kohttp.ext.asStream
 import io.github.rybalkinsd.kohttp.ext.url
@@ -24,16 +25,28 @@ import java.util.zip.ZipFile
 const val DOWNLOAD_FILENAME_PREFIX = "temp-"
 val UPDATE_APK_REGEX = Regex("^(\\d+)\\.apk$")
 val LIBXUL_REGEX = Regex("^lib/([^/]+)/libxul.so")
-val SIGS_PLEASE_FLAG = PackageManager.GET_SIGNATURES or 0x08000000
 
 class AppUpdate private constructor(val context: Context) {
 
+    @Suppress("DEPRECATION")
     companion object {
         private var au: AppUpdate? = null
 
         @Synchronized
         fun getInstance(context: Context): AppUpdate { // Singleton
             return au ?: AppUpdate(context)
+        }
+
+        val SIGS_PLEASE_FLAG = PackageManager.GET_SIGNATURES or 0x08000000
+        val INTENT_ACTION_INSTALL_PACKAGE = Intent.ACTION_INSTALL_PACKAGE
+
+        fun getCerts(pkginfo: PackageInfo): Set<Signature> {
+            val res = if (Build.VERSION.SDK_INT >= 28) { // Android 9+
+                pkginfo.signingInfo?.signingCertificateHistory?.toSet() ?: setOf<Signature>()
+            } else {
+                pkginfo.signatures?.toSet() ?: setOf<Signature>()
+            }
+            return res
         }
     }
 
@@ -50,7 +63,7 @@ class AppUpdate private constructor(val context: Context) {
 
     fun getUpgradeIntent(): Intent? {
         return get_upgrade()?.let {
-            Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
+            Intent(INTENT_ACTION_INSTALL_PACKAGE).apply {
                 setDataAndType(
                     FileProvider.getUriForFile(
                         context, context.getString(R.string.APKUPGRADE_FILEPROVIDER_AUTHORITY), it.first
@@ -61,15 +74,6 @@ class AppUpdate private constructor(val context: Context) {
                 )
             }
         }
-    }
-
-    fun getCerts(pkginfo: PackageInfo): Set<Signature> {
-        val res = if (Build.VERSION.SDK_INT >= 28) { // Android 9+
-            pkginfo.signingInfo?.signingCertificateHistory?.toSet() ?: setOf<Signature>()
-        } else {
-            pkginfo.signatures?.toSet() ?: setOf<Signature>()
-        }
-        return res
     }
 
 
@@ -116,16 +120,15 @@ class AppUpdate private constructor(val context: Context) {
     }
 
 
-    fun verify_apk_update(apkfile: File): Pair<Boolean, Int> {
+    fun verify_apk_update(apkfile: File): Pair<Boolean, Long> {
         val candidate_pkginfo: PackageInfo = context.packageManager.getPackageArchiveInfo(
             apkfile.path, SIGS_PLEASE_FLAG
         )!!
-        if (candidate_pkginfo.versionCode <= BuildConfig.VERSION_CODE || candidate_pkginfo.packageName != BuildConfig.APPLICATION_ID) return false to 0
-        if (Build.VERSION.SDK_INT >= 24) {
-            if (candidate_pkginfo.applicationInfo.minSdkVersion > Build.VERSION.SDK_INT) return false to 0
-        }
+        val candidate_versioncode = PackageInfoCompat.getLongVersionCode(candidate_pkginfo)
+        if (candidate_versioncode <= BuildConfig.VERSION_CODE || candidate_pkginfo.packageName != BuildConfig.APPLICATION_ID) return false to 0
+        if (candidate_pkginfo.applicationInfo.minSdkVersion > Build.VERSION.SDK_INT) return false to 0
         if (!checkSignature(candidate_pkginfo) || !checkABI(apkfile)) return false to 0
-        return true to candidate_pkginfo.versionCode
+        return true to candidate_versioncode
     }
 
 
@@ -149,7 +152,7 @@ class AppUpdate private constructor(val context: Context) {
                 }
                 kotlin.runCatching {
                     resp.asStream()?.use {
-                        val tmpfile = createTempFile("${DOWNLOAD_FILENAME_PREFIX}${peer.appversion}", ".apk", downloadDir)
+                        val tmpfile = @Suppress("DEPRECATION") createTempFile("${DOWNLOAD_FILENAME_PREFIX}${peer.appversion}", ".apk", downloadDir)
                         fun progress_callback(sofar: Long, max: Long?) {
                             max?.also { themax ->
                                 notifier?.showProgress(sofar, themax)
