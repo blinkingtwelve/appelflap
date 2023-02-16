@@ -32,7 +32,7 @@ fun Inet4Address.toInt(): Int {
 fun getAPmodeIPv4Address(context: Context): Inet4Address? {
     // returns null if there are multiple candidates matching the criteria
     val cman = context.getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-    val non_ap_netdevnames = cman.allNetworks.mapNotNull {
+    val non_ap_netdevnames = @Suppress("DEPRECATION") cman.allNetworks.mapNotNull {
         cman.getLinkProperties(it)?.interfaceName
     }.toSet()
     val wlan_ifs = NetworkInterface.getNetworkInterfaces().toList().filter {
@@ -47,13 +47,13 @@ fun getAPmodeIPv4Address(context: Context): Inet4Address? {
 
 fun getWifiDigest(context: Context): WifiDigest {
     val wiman = context.getApplicationContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
-    return wiman.connectionInfo.let {
+    return (@Suppress("DEPRECATION") wiman.connectionInfo).let {
 
         val in_apmode = runCatching { WifiManager::class.java.getMethod("isWifiApEnabled").invoke(wiman) }.getOrNull()
             ?.let { it as Boolean? }
         val apmode_ip = in_apmode.takeIf { it == true }.let { getAPmodeIPv4Address(context) }?.toInt()
 
-        val ip32 = it.ipAddress.takeIf { it !=0 } ?: apmode_ip
+        val ip32 = @Suppress("DEPRECATION") it.ipAddress.takeIf { it !=0 } ?: apmode_ip
         WifiDigest(
             when (in_apmode) {
                 true -> "AP_MODE"
@@ -63,7 +63,7 @@ fun getWifiDigest(context: Context): WifiDigest {
             it.ssid.takeUnless { it == UNKNOWN_WIFINET },
             ip32?.let { ip -> "${ip and 0xff}.${ip shr 8 and 0xff}.${ip shr 16 and 0xff}.${ip shr 24 and 0xff}" },
             ip32,
-            WifiManager.calculateSignalLevel(it.rssi, 101)
+            @Suppress("DEPRECATION") WifiManager.calculateSignalLevel(it.rssi, 101)
         )
     }
 }
