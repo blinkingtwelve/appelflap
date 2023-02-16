@@ -291,9 +291,16 @@ class Conductor private constructor(
             }.getOrNull()
             return@mapNotNull appversion?.let { appver ->
                 peerstatehash?.let { hash ->
-                    BonjourPeer(
-                        nsdinfo.serviceName.split('/', limit=2).last(), nsdinfo.host, nsdinfo.port, hash, appver, nsdinfo.host.hostAddress.startsWith(current_p2p_network_selector)
-                    )
+                    nsdinfo.host.hostAddress?.let {
+                        BonjourPeer(
+                            nsdinfo.serviceName.split('/', limit=2).last(),
+                            nsdinfo.host,
+                            nsdinfo.port,
+                            hash,
+                            appver,
+                            it.startsWith(current_p2p_network_selector)
+                        )
+                    }
                 }
             }
         }.filter { i_am_groupowner or !it.is_p2p or (it.address == groupowner_address) }.toList()
