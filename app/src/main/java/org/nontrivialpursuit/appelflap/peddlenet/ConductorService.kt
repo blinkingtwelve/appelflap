@@ -3,13 +3,13 @@ package org.nontrivialpursuit.appelflap.peddlenet
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_MUTABLE
 import android.app.Service
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat
 import org.nontrivialpursuit.appelflap.Appelflap
 import org.nontrivialpursuit.appelflap.NotificationIDs
 import org.nontrivialpursuit.appelflap.R
@@ -29,7 +29,7 @@ class ConductorService : Service() {
             portno?.also {
                 startIntent.putExtra("portno", it)
             }
-            ContextCompat.startForegroundService(context, startIntent)
+            context.startForegroundService(startIntent)
         }
 
         fun stopService(context: Context) {
@@ -48,7 +48,7 @@ class ConductorService : Service() {
                 createNotificationChannel()
                 val notificationIntent = Intent(this, GeckoWrap::class.java)
                 val pendingIntent = PendingIntent.getActivity(
-                    this, 0, notificationIntent, 0
+                    this, 0, notificationIntent, FLAG_MUTABLE
                 )
                 val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                     .setContentTitle(resources.getString(R.string.conductor_service_notification_title_message))
