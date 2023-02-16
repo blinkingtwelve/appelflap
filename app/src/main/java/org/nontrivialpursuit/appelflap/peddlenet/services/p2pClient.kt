@@ -1,4 +1,5 @@
 @file:JvmName("p2pClient")
+@file:Suppress("DEPRECATION")  // TODO: Move to ConnectivityManager#getLinkProperties() instead of using NetworkInfo
 
 package org.nontrivialpursuit.appelflap.peddlenet.services
 

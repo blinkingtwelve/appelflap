@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")  // TODO: Move to ConnectivityManager#getLinkProperties() instead of using NetworkInfo
+
 package org.nontrivialpursuit.appelflap.peddlenet
 
 import android.annotation.SuppressLint
@@ -137,7 +139,7 @@ class Conductor private constructor(
     }
     var multicastlock: WifiManager.MulticastLock = wifimanager.createMulticastLock("conductor:")
     var screenwakelock: PowerManager.WakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(
-        PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.SCREEN_DIM_WAKE_LOCK, "conductor:"
+        PowerManager.ACQUIRE_CAUSES_WAKEUP or (@Suppress("DEPRECATION") PowerManager.SCREEN_DIM_WAKE_LOCK), "conductor:"
     )
     val leech_lock = Lockchest.get(this::class.qualifiedName + "_LEECH_LOCK")
     var leechee_p2p_last_upload_at: Long? = null
