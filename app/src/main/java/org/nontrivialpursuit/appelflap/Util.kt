@@ -95,7 +95,7 @@ fun FileURInate(context: Context, contentUri: Uri): Uri {
 
     // cleanup old stuff
     val cutoff = System.currentTimeMillis() - GECKOVIEW_FILE_URI_TO_TEMPFILE_EXPIRY
-    tempdir.listFiles().toList().forEach {
+    tempdir.listFiles()!!.toList().forEach {
         if (it.lastModified() < cutoff) {
             it.deleteRecursively()
         }
