@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import org.nontrivialpursuit.appelflap.BuildConfig
 import org.nontrivialpursuit.appelflap.R
+import org.nontrivialpursuit.appelflap.getLocalBroadcastManager
 import org.nontrivialpursuit.appelflap.peddlenet.ConductorState
 import org.nontrivialpursuit.appelflap.peddlenet.FORCE_MODESWITCH_ACTION
 import org.nontrivialpursuit.appelflap.peddlenet.SetStatusReceiver
@@ -30,7 +30,7 @@ class PreflightFragment : Fragment() {
         val has_p2p_hardware = wifiman.isP2pSupported
         val wifi_is_on = wifiman.isWifiEnabled
         val p2p_featureflag_is_on = BuildConfig.WIFI_P2P_ENABLED
-        val lobroman = LocalBroadcastManager.getInstance(requireContext())
+        val lobroman = getLocalBroadcastManager(requireContext())
 
         val build_text = when (TENPLUS) {
             true -> "${thumbsup} You're on Android 10+."

@@ -4,8 +4,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import org.nontrivialpursuit.appelflap.Logger
+import org.nontrivialpursuit.appelflap.getLocalBroadcastManager
 import org.nontrivialpursuit.appelflap.peddlenet.Conductor
 import org.nontrivialpursuit.appelflap.peddlenet.STATUS_INTERVAL_ACTION
 import org.nontrivialpursuit.appelflap.peddlenet.STATUS_PUSH_ACTION
@@ -18,7 +18,7 @@ class StatusBroadcaster(val conductor: Conductor) : ServiceHandler {
 
     override val log = Logger(this)
     override var is_running = false
-    val lobroman = LocalBroadcastManager.getInstance(conductor.context)
+    val lobroman = getLocalBroadcastManager(conductor.context)
     private var statseq = 0
     private val schedxecutor = Executors.newScheduledThreadPool(1)
     private var broadcaster: ScheduledFuture<*>? = null

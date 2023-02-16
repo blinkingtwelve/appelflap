@@ -15,7 +15,6 @@ import android.net.wifi.p2p.WifiP2pInfo
 import android.net.wifi.p2p.WifiP2pManager
 import android.os.PowerManager
 import android.os.SystemClock
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import org.json.JSONObject
 import org.nontrivialpursuit.appelflap.BuildConfig
 import org.nontrivialpursuit.appelflap.Logger
@@ -24,6 +23,7 @@ import org.nontrivialpursuit.appelflap.peddlenet.Runlevels.P2P_STATES
 import org.nontrivialpursuit.appelflap.peddlenet.Runlevels.levelmap
 import org.nontrivialpursuit.appelflap.peddlenet.services.*
 import org.nontrivialpursuit.appelflap.get_friendly_nodeID
+import org.nontrivialpursuit.appelflap.getLocalBroadcastManager
 import org.nontrivialpursuit.eekhoorn.KoekoeksNest
 import org.nontrivialpursuit.ingeblikt.*
 import java.net.Inet4Address
@@ -132,7 +132,7 @@ class Conductor private constructor(
     var schedxecutor: ExecutorService? = null
     val p2pmanager: WifiP2pManager by lazy { context.getSystemService(Context.WIFI_P2P_SERVICE) as WifiP2pManager }
     val wifimanager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager  // straight context.getSystemService(Context.WIFI_SERVICE) leaks on android < N. Issue id: WifiManagerPotentialLeak
-    val lobroman = LocalBroadcastManager.getInstance(context).also {
+    val lobroman = getLocalBroadcastManager(context).also {
         it.registerReceiver(SetStatusReceiver(this), IntentFilter(FORCE_MODESWITCH_ACTION))
     }
     var wifilock: WifiManager.WifiLock = wifimanager.createWifiLock(WifiManager.WIFI_MODE_FULL, "conductor:")

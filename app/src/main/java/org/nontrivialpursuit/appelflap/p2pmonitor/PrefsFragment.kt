@@ -12,10 +12,10 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import org.nontrivialpursuit.appelflap.DEBUG_SITEURL_PREFS_NAME
 import org.nontrivialpursuit.appelflap.R
 import org.nontrivialpursuit.appelflap.SiteUrls
+import org.nontrivialpursuit.appelflap.getLocalBroadcastManager
 import org.nontrivialpursuit.appelflap.peddlenet.STATUS_INTERVAL_ACTION
 import org.nontrivialpursuit.appelflap.peddlenet.services.StatusBroadcaster
 
@@ -31,7 +31,7 @@ class PrefsFragment : Fragment() {
         val our_domains = root.findViewById<EditText>(R.id.ourdomains).also {
             it.setText(SiteUrls(requireContext()).our_domains.sorted().joinToString(", "))
         }
-        val lobroman = LocalBroadcastManager.getInstance(requireContext())
+        val lobroman = getLocalBroadcastManager(requireContext())
         val siteurl_prefs = requireContext().getSharedPreferences(DEBUG_SITEURL_PREFS_NAME, Context.MODE_PRIVATE)
 
         statsIntervalView.setOnEditorActionListener(object : TextView.OnEditorActionListener {

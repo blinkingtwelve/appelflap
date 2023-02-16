@@ -10,9 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import org.nontrivialpursuit.appelflap.Logger
 import org.nontrivialpursuit.appelflap.R
+import org.nontrivialpursuit.appelflap.getLocalBroadcastManager
 import org.nontrivialpursuit.appelflap.peddlenet.STATUS_PUSH_ACTION
 
 class StatusReceiver(val statfrag: StatusFragment) : BroadcastReceiver() {
@@ -32,7 +32,7 @@ class StatusFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_p2pmonitor_status, container, false)
         this.statusview = root.findViewById(R.id.text_status)
         this.statusview?.text = "Hold on for stats to appear. If you have not enabled stats broadcasting, you will be waiting for quite a while."
-        LocalBroadcastManager.getInstance(requireContext()).registerReceiver(StatusReceiver(this), IntentFilter(STATUS_PUSH_ACTION))
+        getLocalBroadcastManager(requireContext()).registerReceiver(StatusReceiver(this), IntentFilter(STATUS_PUSH_ACTION))
         return root
     }
 

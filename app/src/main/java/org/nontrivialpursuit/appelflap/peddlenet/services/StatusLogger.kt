@@ -4,9 +4,9 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import org.json.JSONObject
 import org.nontrivialpursuit.appelflap.Logger
+import org.nontrivialpursuit.appelflap.getLocalBroadcastManager
 import org.nontrivialpursuit.appelflap.peddlenet.*
 import java.io.BufferedWriter
 import java.io.File
@@ -16,7 +16,7 @@ class StatusLogger(val conductor: Conductor) : ServiceHandler {
 
     override val log = Logger(this)
     override var is_running = false
-    val lobroman = LocalBroadcastManager.getInstance(conductor.context)
+    val lobroman = getLocalBroadcastManager(conductor.context)
     var outwriter: BufferedWriter? = null
 
     val logreceiver = object : BroadcastReceiver() {
