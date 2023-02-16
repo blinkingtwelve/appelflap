@@ -99,7 +99,7 @@ class p2pClient(
                 val networkinfo: NetworkInfo = intent.getParcelableExtra<NetworkInfo>(WifiP2pManager.EXTRA_NETWORK_INFO)!!
                 val groupinfo: WifiP2pGroup? = intent.getParcelableExtra<WifiP2pGroup>(WifiP2pManager.EXTRA_WIFI_P2P_GROUP)
                 log.d("Connection changed event: p2pinfo:\n${p2pinfo}\nnetworkinfo:\n${networkinfo}\ngroupinfo:${groupinfo}")
-                p2pinfo?.also {
+                p2pinfo.also {
                     if (it.groupFormed && !it.isGroupOwner) conductor.stats.wifip2p_joins_performed += 1
                 }
                 if (networkinfo.state == NetworkInfo.State.DISCONNECTED && networkinfo.isAvailable && errorcnt.values.sum() >= 5) {

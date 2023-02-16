@@ -30,12 +30,12 @@ class LogRecyclerViewAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val thefile = values[position]
-        val timestamp = thefile.name.substringBefore('.').let {
+        val timestamp = thefile.name.substringBefore('.').let maketimestamp@{
             it.toLongOrNull()?.let {
                 if (Build.VERSION.SDK_INT >= 26) {
-                    return@let DateTimeFormatter.ISO_INSTANT.format(Instant.ofEpochMilli(it))
+                    return@maketimestamp DateTimeFormatter.ISO_INSTANT.format(Instant.ofEpochMilli(it))
                 } else {
-                    return@let Date(it).toString()
+                    return@maketimestamp Date(it).toString()
                 }
             }
         } ?: "???"

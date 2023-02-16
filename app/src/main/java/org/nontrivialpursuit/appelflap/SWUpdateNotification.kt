@@ -19,10 +19,10 @@ class SWUpdateNotification(val context: Context, val koekoeksNest: KoekoeksNest)
 
 
     fun poke() {
-        when (injectables(koekoeksNest.getSubscriptions(mutex_permits = 0), koekoeksNest.listBundles()).first {
+        when (injectables(koekoeksNest.getSubscriptions(mutex_permits = 0), koekoeksNest.listBundles()).filter {
             it.type == CacheType.SWORK
-        }) {
-            null -> {
+        }.size) {
+            0 -> {
                 cancel_showing()
             }
             else -> {

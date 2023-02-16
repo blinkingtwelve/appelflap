@@ -93,25 +93,26 @@ class AppUpdate private constructor(val context: Context) {
 
 
     fun max_available_version(): Int {
-        return get_upgrade(downloadDir.listFiles().toList())?.second ?: 0
+        return get_upgrade(downloadDir.listFiles()?.toList())?.second ?: 0
     }
 
 
     fun cleanup(with_lock: String? = null) {
-        val torun = {
-            val filelist = downloadDir.listFiles().toList()
-            val toKeep = get_upgrade(filelist)?.first
-            filelist.filter { it != toKeep }.forEach { it.deleteRecursively() }
+        val torun: () -> Unit = {
+            downloadDir.listFiles()?.toList()?.also { thefilelist ->
+                val toKeep = get_upgrade(thefilelist)?.first
+                thefilelist.filter { it != toKeep }.forEach { it.deleteRecursively() }
+            }
         }
         with_lock?.let { Lockchest.runWith(it, torun) } ?: torun.invoke()
     }
 
 
     fun get_upgrade(listing: List<File>? = null): Pair<File, Int>? {
-        val the_listing = listing ?: downloadDir.listFiles().toList()
+        val the_listing = listing ?: downloadDir.listFiles()?.toList()
         return the_listing
-            .mapNotNull { UPDATE_APK_REGEX.find(it.name)?.destructured?.component1()?.toIntOrNull()?.let { version -> it to version } }
-            .maxByOrNull { it.second }?.takeIf { it.second > BuildConfig.VERSION_CODE }
+            ?.mapNotNull { UPDATE_APK_REGEX.find(it.name)?.destructured?.component1()?.toIntOrNull()?.let { version -> it to version } }
+            ?.maxByOrNull { it.second }?.takeIf { it.second > BuildConfig.VERSION_CODE }
     }
 
 
@@ -130,12 +131,12 @@ class AppUpdate private constructor(val context: Context) {
 
     fun grab_apk(peer: BonjourPeer, notifier: APKUpdateNotification? = null): Boolean {
         val apk_url = "${peer.url()}$GIFT_PATH"
-        val resp = kotlin.runCatching {
+        val apkgrab_resp = kotlin.runCatching {
             httpGet(pünktlich_httpclient) {
                 url(apk_url)
             }
         }.getOrNull() ?: return false
-        resp.use { resp ->
+        apkgrab_resp.use { resp ->
             if (resp.code == 200) {
                 val expected_size = resp.header("Content-Length")?.let { it.toLongOrNull() } ?: return false
                 if (expected_size > MAX_APK_FETCH_SIZE) {

@@ -353,7 +353,7 @@ class Conductor private constructor(
                 "bonjour_candidate_peers_on_othernets" to bonjourpeers.filter { !it.is_p2p }.size,
                 "bundlestatehash_skiplist" to bundlecollection_skiplist.map { it.key.thestate }.toTypedArray(),
                 "my_bundlestate" to current_bundlestate.thestate,
-                "my_bundles" to koekoeksNest?.let { it.listBundles().map { "${it.bundle.name}@${it.bundle.version}" } },
+                "my_bundles" to koekoeksNest.let { it.listBundles().map { "${it.bundle.name}@${it.bundle.version}" } },
                 "p2p_devicestatus" to "${P2P_DEVICE_STATUS[current_p2p_device?.status] ?: "Unknown"}",
                 "p2p_network" to "${current_groupinfo?.networkName}",
                 "am_groupowner" to current_groupinfo?.isGroupOwner,

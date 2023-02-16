@@ -53,7 +53,7 @@ fun getWifiDigest(context: Context): WifiDigest {
             ?.let { it as Boolean? }
         val apmode_ip = in_apmode.takeIf { it == true }.let { getAPmodeIPv4Address(context) }?.toInt()
 
-        val ip = it.ipAddress.takeIf { it !=0 } ?: apmode_ip
+        val ip32 = it.ipAddress.takeIf { it !=0 } ?: apmode_ip
         WifiDigest(
             when (in_apmode) {
                 true -> "AP_MODE"
@@ -61,8 +61,8 @@ fun getWifiDigest(context: Context): WifiDigest {
             },
             it.supplicantState.name,
             it.ssid.takeUnless { it == UNKNOWN_WIFINET },
-            ip?.let { ip -> "${ip and 0xff}.${ip shr 8 and 0xff}.${ip shr 16 and 0xff}.${ip shr 24 and 0xff}" },
-            ip,
+            ip32?.let { ip -> "${ip and 0xff}.${ip shr 8 and 0xff}.${ip shr 16 and 0xff}.${ip shr 24 and 0xff}" },
+            ip32,
             WifiManager.calculateSignalLevel(it.rssi, 101)
         )
     }

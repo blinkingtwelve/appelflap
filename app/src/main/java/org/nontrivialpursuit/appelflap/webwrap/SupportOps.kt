@@ -24,7 +24,7 @@ class SupportOps : AppCompatActivity() {
         val credbox: TextView = findViewById(R.id.text_appelflap_creds)
         credbox.text = createUrl()
         val peerbox: TextView = findViewById(R.id.text_peer_id)
-        peerbox.text = Appelflap.get(applicationContext)?.conductor?.friendly_nodeID
+        peerbox.text = Appelflap.get(applicationContext).conductor.friendly_nodeID
     }
 
     fun createUrl(): String {

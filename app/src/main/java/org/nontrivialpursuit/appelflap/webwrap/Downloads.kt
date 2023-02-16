@@ -52,7 +52,7 @@ class TempFileProvider : FileProvider()
 data class DownloadDescriptor(val uri: String, val headers: Map<String, String>, var digest: String? = null) {
     companion object {
         fun create(uri: String, headers: Map<String, String>): DownloadDescriptor {
-            return DownloadDescriptor(uri, headers.mapKeys { it.key.toLowerCase() })
+            return DownloadDescriptor(uri, headers.mapKeys { it.key.lowercase() })
         }
     }
 
@@ -232,14 +232,14 @@ class Downloads(val context: Context) {
     val downloadDir = File(context.filesDir, DOWNLOADS_DIR).apply { mkdirs() }
 
     fun listDownloads(): DownloadDisplayDescriptorListing {
-        return DownloadDisplayDescriptorListing(downloadDir.listFiles().mapNotNull { thefile ->
+        return DownloadDisplayDescriptorListing(downloadDir.listFiles()?.mapNotNull { thefile ->
             METAFILE_REX.matchEntire(thefile.name)?.let { therexmatch ->
                 val idparts = therexmatch.groupValues.get(1).split(".", limit = 2).slice(0..1)
                 DownloadEntry(context, idparts[0] to idparts[1]).takeUnless { it.bodyfile.canWrite() }?.let { dlentry ->
                     dlentry.toDownloadDescriptor()
                 }
             }
-        })
+        } ?: emptyList())
     }
 
 
@@ -274,7 +274,7 @@ class Downloads(val context: Context) {
             DownloadStatus.DOWNLOAD_NEW -> actuallyDownload(response, lock)
             DownloadStatus.OPEN_EXISTING -> download.androidOpen()
             DownloadStatus.DOWNLOAD_ASK_OVERWRITE -> {
-                val clickhandler = { dialogInterface: DialogInterface, which: Int ->
+                val clickhandler = { _: DialogInterface, which: Int ->
                     when (which) {
                         AlertDialog.BUTTON_POSITIVE -> actuallyDownload(response, lock)
                         AlertDialog.BUTTON_NEGATIVE -> download.androidOpen()
