@@ -5,7 +5,6 @@ import android.content.DialogInterface
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.WindowManager
 import androidx.appcompat.app.AlertDialog
 import org.nontrivialpursuit.ingeblikt.*
 import java.io.InputStream
@@ -21,9 +20,7 @@ class BundlefileOpener : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        this.window.setFlags(
-            WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN
-        )
+        this.window.setFullScreenFlags()
         this.supportActionBar?.hide()
         this.window.setBackgroundDrawableResource(android.R.color.black)
 

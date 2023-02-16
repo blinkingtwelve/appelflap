@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.res.AssetManager
 import android.net.Uri
 import android.util.Log
+import android.view.Window
+import android.view.WindowManager
 import android.webkit.URLUtil
 import org.nontrivialpursuit.eekhoorn.createTempdir
 import org.nontrivialpursuit.ingeblikt.slurp
@@ -80,6 +82,10 @@ fun AssetManager.deepcopy(sourcepath: String, destdir: File) {
     }
 }
 
+@Suppress("DEPRECATION")
+fun Window.setFullScreenFlags() {
+    this.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
+}
 
 fun FileURInate(context: Context, contentUri: Uri): Uri {
     // Read content-uri contents into a file we can get a file-uri for, and return that.

@@ -17,6 +17,7 @@ class PushRegistrations(context: Context) {
     private val cursorpositions: SharedPreferences
     private val BASE64_FLAVOUR = Base64.URL_SAFE or Base64.NO_WRAP
 
+    @Suppress("UNCHECKED_CAST")
     fun getRegs(): Map<String, List<String>> {
         val res: MutableMap<String, List<String>> = HashMap()
         for (e in regprefs.all as Map<String, String>) {
