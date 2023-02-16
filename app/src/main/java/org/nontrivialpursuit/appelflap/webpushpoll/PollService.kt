@@ -11,7 +11,7 @@ class PollService : JobService() {
     override fun onStartJob(jobParameters: JobParameters): Boolean {
         log.i("Start webpush poll job")
         val appcontext = application.applicationContext
-        PollTask(appcontext, jobParameters, this).execute()
+        @Suppress("DEPRECATION") PollTask(appcontext, jobParameters, this).execute()
         return true // we're scheduling work on a spin-off thread.
     }
 

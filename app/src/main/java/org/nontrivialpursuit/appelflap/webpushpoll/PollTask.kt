@@ -1,3 +1,4 @@
+@file:Suppress("DEPRECATION")
 package org.nontrivialpursuit.appelflap.webpushpoll
 
 import android.app.job.JobParameters
