@@ -135,7 +135,6 @@ class Conductor private constructor(
     val lobroman = getLocalBroadcastManager(context).also {
         it.registerReceiver(SetStatusReceiver(this), IntentFilter(FORCE_MODESWITCH_ACTION))
     }
-    var wifilock: WifiManager.WifiLock = wifimanager.createWifiLock(WifiManager.WIFI_MODE_FULL, "conductor:")
     var multicastlock: WifiManager.MulticastLock = wifimanager.createMulticastLock("conductor:")
     var screenwakelock: PowerManager.WakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(
         PowerManager.ACQUIRE_CAUSES_WAKEUP or PowerManager.SCREEN_DIM_WAKE_LOCK, "conductor:"
@@ -446,7 +445,6 @@ class Conductor private constructor(
         current_portnumber = portno
         log.i("Port number: ${current_portnumber}")
         monitors.forEach { el -> context.registerReceiver(el.value, el.key) }
-        wifilock.acquire()
         multicastlock.acquire()
         if (TENPLUS) {
             channel = p2pmanager.initialize(context, context.mainLooper, this)
@@ -481,12 +479,6 @@ class Conductor private constructor(
         //service_registry.values.toList().reversed().forEach { it.stop() }
         state_poke(ConductorState.STOPPED)
         multicastlock.also {
-            try {
-                if (it.isHeld) it.release()
-            } catch (e: RuntimeException) {
-            }  // wasn't locked
-        }
-        wifilock.also {
             try {
                 if (it.isHeld) it.release()
             } catch (e: RuntimeException) {
