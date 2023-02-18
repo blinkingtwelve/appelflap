@@ -12,7 +12,6 @@ import android.os.storage.StorageManager
 import com.yariksoffice.lingver.Lingver
 import org.mozilla.geckoview.*
 import org.nontrivialpursuit.appelflap.peddlenet.ConductorService
-import org.nontrivialpursuit.appelflap.peddlenet.ServicePoke
 import org.nontrivialpursuit.appelflap.webwrap.*
 import org.nontrivialpursuit.eekhoorn.HttpEekhoorn
 import org.nontrivialpursuit.eekhoorn.KoekoeksNest
@@ -386,7 +385,7 @@ class GeckoRuntimeManager private constructor(
             koekoekBridge = koekoeksNest,
             DEBUG = BuildConfig.DEBUG
         ).also {
-            ConductorService.startService(application.applicationContext, ServicePoke.START.ordinal, it.get_portno())
+            ConductorService.startService(application.applicationContext, it.get_portno())
             writeEekhoornInfo(it)
         }
         writePeerIDInfo()

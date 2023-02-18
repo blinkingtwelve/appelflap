@@ -16,12 +16,6 @@ enum class ConductorState {
     HOSTING
 }
 
-enum class ServicePoke {
-    START,
-    BACKGROUNDED,
-    FOREGROUNDED
-}
-
 val BONJOUR_SERVICETYPE = "_${BuildConfig.APPLICATION_ID.replace('.', '-')}._tcp."
 const val FIELD_STATEHASH = "statehash"
 const val FIELD_APPVERSION = "appver"
@@ -30,6 +24,7 @@ const val NOTIFICATION_STATUS_CHANNEL = "statuschannel"
 const val STATUS_PUSH_ACTION = "CONDUCTOR_STATUS"
 const val STATUS_INTERVAL_ACTION = "CONDUCTOR_STATUS_INTERVAL"
 const val FORCE_MODESWITCH_ACTION = "FORCE_MODESWITCH"
+const val BACKGROUNDED_ACTION = "BACKGROUNDED_ACTION"
 
 val PEER_SSID_REX = Regex("^DIRECT-(?<nodeid>[2-9a-hjkmnp-zA-HJKLMNP-Z]{4})-(?<statehash>[0-9a-f]{8})-(?<hmac>[0-9a-f]{8})$")
 
@@ -74,3 +69,5 @@ const val MAX_BUNDLE_FETCH_SIZE = 256 * 1024 * 1024  // We consider bundles larg
 const val MAX_APK_FETCH_SIZE = 256 * 1024 * 1024  // We consider APKs larger than this ridiculous
 const val PEER_CONNECT_TIMEOUT = 3_000L
 const val PEER_READ_TIMEOUT = 5_000L
+
+const val SERVICE_START_DELAY_WARN_MS = 1000L

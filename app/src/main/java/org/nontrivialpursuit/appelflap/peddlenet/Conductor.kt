@@ -52,6 +52,13 @@ class SetStatusReceiver(val conductor: Conductor) : BroadcastReceiver() {
     }
 }
 
+class SetBackgroundedReceiver(val conductor: Conductor) : BroadcastReceiver() {
+    override fun onReceive(context: Context, intent: Intent) {
+        intent.getBooleanExtra(BACKGROUNDED_ACTION, false).also {
+            conductor.backgrounded = it
+        }
+    }
+}
 
 class Conductor private constructor(
         internal val context: Context, val koekoeksNest: KoekoeksNest) : WifiP2pManager.ChannelListener {
@@ -136,6 +143,7 @@ class Conductor private constructor(
     val wifimanager = context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager  // straight context.getSystemService(Context.WIFI_SERVICE) leaks on android < N. Issue id: WifiManagerPotentialLeak
     val lobroman = getLocalBroadcastManager(context).also {
         it.registerReceiver(SetStatusReceiver(this), IntentFilter(FORCE_MODESWITCH_ACTION))
+        it.registerReceiver(SetBackgroundedReceiver(this), IntentFilter(BACKGROUNDED_ACTION))
     }
     var multicastlock: WifiManager.MulticastLock = wifimanager.createMulticastLock("conductor:")
     var screenwakelock: PowerManager.WakeLock = (context.getSystemService(Context.POWER_SERVICE) as PowerManager).newWakeLock(
@@ -398,7 +406,9 @@ class Conductor private constructor(
 
     fun state_poke(desired_state: ConductorState? = null) {
         Lockchest.runWith(this::class.qualifiedName + "_TRANSITION_LOCK", {
-            log.v("state poked")
+            desired_state?.also {
+                log.v("poked for state: ${ConductorState.values()[it.ordinal]}")
+            } ?: log.v("poked (transition tick)")
             if (desired_state != null && desired_state in levelmap) {
                 log.v("state change: current target state: ${target_state}, setting requested: ${desired_state}")
                 target_state = desired_state

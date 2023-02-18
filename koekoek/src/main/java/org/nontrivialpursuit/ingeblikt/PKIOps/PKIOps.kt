@@ -100,6 +100,7 @@ abstract class PKIOps(
     }
 
     fun getRootCert(): X509Certificate {
+        // Note: An apparently harmless "android.os.ServiceSpecificException:  (code 7)" may be logged here by the KeyStore.
         return store.getCertificate(ROOTCERT_ALIAS) as X509Certificate? ?: importRootCert()
     }
 

@@ -8,9 +8,7 @@ import org.mozilla.geckoview.*
 import org.nontrivialpursuit.appelflap.*
 import org.nontrivialpursuit.appelflap.BuildConfig
 import org.nontrivialpursuit.appelflap.R
-import org.nontrivialpursuit.appelflap.peddlenet.ConductorService
-import org.nontrivialpursuit.appelflap.peddlenet.ServicePoke
-import org.nontrivialpursuit.appelflap.peddlenet.StatusNotifier
+import org.nontrivialpursuit.appelflap.peddlenet.*
 import org.nontrivialpursuit.appelflap.webpushpoll.PollScheduler
 
 const val REQUEST_FILE_PICKER = 1
@@ -19,6 +17,7 @@ const val INTENT_EXTRA_NOTIFICATION_CLICK = "NOTIFICATION_CLICK"
 class GeckoWrap : Activity() {
     private lateinit var geckoViewport: GeckoView
     val log = Logger(this)
+    val lobroman = getLocalBroadcastManager(this)
     lateinit var siteUrls: SiteUrls
     lateinit var statusnotifier: StatusNotifier
     lateinit var BACKGROUNDED_MESSAGE: String
@@ -138,16 +137,23 @@ class GeckoWrap : Activity() {
         super.onDestroy()
     }
 
+    fun notifyBGFG_Conductor(is_backgrounded: Boolean) {
+        lobroman.sendBroadcast(Intent(this, Conductor::class.java).also {
+            it.setAction(BACKGROUNDED_ACTION)
+            it.putExtra(BACKGROUNDED_ACTION, is_backgrounded)
+        })
+    }
+
     override fun onResume() {
         log.i("onResume")
-        ConductorService.startService(this, ServicePoke.FOREGROUNDED.ordinal)
+        notifyBGFG_Conductor(false)
         statusnotifier.clear()
         super.onResume()
     }
 
     override fun onPause() {
         log.i("onPause")
-        ConductorService.startService(this, ServicePoke.BACKGROUNDED.ordinal)
+        notifyBGFG_Conductor(true)
         statusnotifier.setStatus(BACKGROUNDED_MESSAGE)
         super.onPause()
     }

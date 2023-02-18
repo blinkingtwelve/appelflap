@@ -9,8 +9,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
+import android.os.SystemClock
 import androidx.core.app.NotificationCompat
 import org.nontrivialpursuit.appelflap.Appelflap
+import org.nontrivialpursuit.appelflap.Logger
 import org.nontrivialpursuit.appelflap.NotificationIDs
 import org.nontrivialpursuit.appelflap.R
 import org.nontrivialpursuit.appelflap.webwrap.GeckoWrap
@@ -23,12 +25,16 @@ class ConductorService : Service() {
     private val executor: ExecutorService = Executors.newFixedThreadPool(1)
 
     companion object {
-        fun startService(context: Context, poke: Int, portno: Int? = null) {
+        val log = Logger(this)
+
+        @Synchronized
+        fun startService(context: Context, portno: Int? = null) {
+            log.i("startService: poked with portno ${portno}")
             val startIntent = Intent(context, ConductorService::class.java)
-            startIntent.putExtra("poke", poke)
             portno?.also {
                 startIntent.putExtra("portno", it)
             }
+            startIntent.putExtra("intent_created_at", SystemClock.elapsedRealtime())
             context.startForegroundService(startIntent)
         }
 
@@ -38,34 +44,29 @@ class ConductorService : Service() {
         }
     }
 
+    @Synchronized
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
-        val poke = intent.getIntExtra("poke", ServicePoke.BACKGROUNDED.ordinal)
+        val intent_created_at = intent.getLongExtra("intent_created_at", 0L)
+        log.i("onStartCommand: poked with startId ${startId} created ${SystemClock.elapsedRealtime() - intent_created_at} ms ago")
         val conductor = Appelflap.get(this).conductor
-        when (poke) {
-            ServicePoke.START.ordinal -> {
-                val portno: Int = intent.getIntExtra("portno", 0)
-                if (portno !in 1..65535) throw RuntimeException("Invalid port number")
-                createNotificationChannel()
-                val notificationIntent = Intent(this, GeckoWrap::class.java)
-                val pendingIntent = PendingIntent.getActivity(
-                    this, 0, notificationIntent, FLAG_MUTABLE
-                )
-                val notification = NotificationCompat.Builder(this, CHANNEL_ID)
-                    .setContentTitle(resources.getString(R.string.conductor_service_notification_title_message))
-                    .setSmallIcon(R.drawable.ic_radar).setContentIntent(pendingIntent).build()
-                startForeground(NotificationIDs.CONDUCTOR_FOREGROUNDSERVICE.ordinal, notification)
-                executor.execute {
-                    conductor.also { it.start(portno) }
-                }
-            }
-            ServicePoke.BACKGROUNDED.ordinal -> {
-                conductor.backgrounded = true
-            }
-            ServicePoke.FOREGROUNDED.ordinal -> {
-                conductor.backgrounded = false
-            }
+        val portno: Int = intent.getIntExtra("portno", 0)
+        if (portno !in 1..65535) throw RuntimeException("Invalid port number")
+        createNotificationChannel()
+        val notificationIntent = Intent(this, GeckoWrap::class.java)
+        val pendingIntent = PendingIntent.getActivity(
+            this, 0, notificationIntent, FLAG_MUTABLE
+        )
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setContentTitle(resources.getString(R.string.conductor_service_notification_title_message)).setSmallIcon(R.drawable.ic_radar)
+            .setContentIntent(pendingIntent).build()
+        startForeground(NotificationIDs.CONDUCTOR_FOREGROUNDSERVICE.ordinal, notification)
+        (SystemClock.elapsedRealtime() - intent_created_at).takeIf{it > SERVICE_START_DELAY_WARN_MS}?.also{
+            log.w("onStartCommand: startForeground poked within ${it} ms of startForegroundService")
         }
-        return START_NOT_STICKY
+        executor.execute {
+            conductor.also { it.start(portno) }
+        }
+        return START_REDELIVER_INTENT
     }
 
     override fun onBind(intent: Intent): IBinder? {
