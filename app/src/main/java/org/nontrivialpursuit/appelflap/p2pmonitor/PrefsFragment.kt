@@ -42,7 +42,7 @@ class PrefsFragment : Fragment() {
                     // Android 8 sends a EditorInfo.IME_ACTION_UNSPECIFIED
                     lobroman.sendBroadcast(Intent(context, StatusBroadcaster::class.java).also {
                         val thetext = v.text.toString()
-                        if (!thetext.isNullOrBlank()) {
+                        if (!thetext.isBlank()) {
                             it.putExtra("status_interval", thetext.toLongOrNull())
                             it.action = STATUS_INTERVAL_ACTION
                         }

@@ -247,7 +247,7 @@ class GeckoRuntimeManager private constructor(
         return false
     }
 
-    override fun getWifiDigest(): WifiDigest? {
+    override fun getWifiDigest(): WifiDigest {
         return getWifiDigest(application)
     }
 
@@ -276,20 +276,20 @@ class GeckoRuntimeManager private constructor(
     }
 
     override fun openDownload(actionSubject: Pair<String, String>): Boolean {
-        try {
+        return try {
             DownloadEntry(wrapper ?: application, actionSubject).androidOpen()
-            return true
+            true
         } catch (e: DownloadIllegalStateException) {
-            return false
+            false
         }
     }
 
     override fun shareDownload(actionSubject: Pair<String, String>): Boolean {
-        try {
+        return try {
             DownloadEntry(wrapper ?: application, actionSubject).androidShare()
-            return true
+            true
         } catch (e: DownloadIllegalStateException) {
-            return false
+            false
         }
     }
 

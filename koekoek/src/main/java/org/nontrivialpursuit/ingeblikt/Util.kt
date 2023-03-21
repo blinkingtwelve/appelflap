@@ -34,10 +34,10 @@ enum class MEAL_SIZE {
 
 
 class ProgressCallbackDampener(val every: Long, val callback: (Long, Long?) -> Unit) {
-    var chunk_cnt = 0L;
+    var chunk_cnt = 0L
     fun progress_callback(read_sofar: Long, max: Long?) {
         if (((max != null) && (read_sofar >= max)) || ((read_sofar / every) > chunk_cnt)){
-            chunk_cnt++;
+            chunk_cnt++
             callback(read_sofar, max)
         }
     }
@@ -51,7 +51,7 @@ fun OutputStream.slurp(
         progress_callback: ((Long, Long?) -> Unit)? = null): MEAL_SIZE {
     val txbuf = ByteArray(BUFSIZE)
     var read_sofar = 0L
-    while (max_to_read?.let { read_sofar < it } ?: true) {
+    while (max_to_read?.let { read_sofar < it } != false) {
         val amt_read = sin.read(txbuf,
                                 0,
                                 max_to_read?.let { (it - read_sofar).toInt().let { if (it < BUFSIZE) it else BUFSIZE } } ?: BUFSIZE)
@@ -136,7 +136,7 @@ fun copyConsistent(src: File, dest: File? = null, hash: ByteArray? = null): File
     }
 }
 
-class DevNullStream() : OutputStream() {
+class DevNullStream : OutputStream() {
     override fun write(p0: Int) {}
     override fun write(b: ByteArray) {}
     override fun write(b: ByteArray, off: Int, len: Int) {}

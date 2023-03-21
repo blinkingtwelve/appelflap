@@ -14,6 +14,7 @@ import org.nontrivialpursuit.libkitchensink.hexlify
 import java.io.*
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.Executor
 import java.util.concurrent.Executors
 import kotlin.collections.HashMap
 
@@ -37,7 +38,7 @@ class KoekoeksNest(
     override val subscriptionsRegistryFile = File(bundle_dir, SUBSCRIPTIONS_REGISTRY)
     val CollectionUpdateCallbacks = ConcurrentHashMap<String, () -> Unit>()
     val SubscriptionUpdateCallbacks = ConcurrentHashMap<String, () -> Unit>()
-    val executor = Executors.newFixedThreadPool(1)
+    val executor: Executor = Executors.newFixedThreadPool(1)
 
     fun do_subscriptionupdate_callbacks() {
         SubscriptionUpdateCallbacks.values.forEach {

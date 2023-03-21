@@ -14,6 +14,7 @@ import org.nontrivialpursuit.eekhoorn.PUBLICATIONS_PATH
 import org.nontrivialpursuit.ingeblikt.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
@@ -21,7 +22,7 @@ class Leecher(private val conductor: Conductor) : ServiceHandler {
 
     override val log = Logger(this)
     override var is_running = false
-    val schedxecutor = Executors.newScheduledThreadPool(1)
+    val schedxecutor: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
     var executor: ExecutorService? = null
     var connection_initiator: ScheduledFuture<*>? = null
     val pünktlich_httpclient = OkHttpClient.Builder().connectTimeout(PEER_CONNECT_TIMEOUT, TimeUnit.MILLISECONDS)
@@ -37,7 +38,7 @@ class Leecher(private val conductor: Conductor) : ServiceHandler {
             }.getOrNull() ?: return false
             bundle_resp.use { resp ->
                 if (resp.code == 200) {
-                    val expected_size = resp.header("Content-Length")?.let { it.toLongOrNull() } ?: return false
+                    val expected_size = resp.header("Content-Length")?.toLongOrNull() ?: return false
                     if (expected_size > MAX_BUNDLE_FETCH_SIZE) {
                         log.w("Bundle size of ${expected_size} deemed to large, url: ${bundle_url}")
                         return false

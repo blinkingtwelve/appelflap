@@ -5,6 +5,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.eclipse.jetty.io.RuntimeIOException
 import org.eclipse.jetty.util.log.Log
+import org.eclipse.jetty.util.log.Logger
 import org.nontrivialpursuit.ingeblikt.*
 import org.nontrivialpursuit.libkitchensink.hexlify
 import java.io.*
@@ -19,7 +20,7 @@ enum class EikelMode {
 }
 
 class Eikel(val basedir: File, urlpath: String, val mode: EikelMode) {
-    val logger = Log.getLogger(this.javaClass)
+    val logger: Logger = Log.getLogger(this.javaClass)
     val eikel_digest = urlpath.toByteArray(Charsets.UTF_8).md5().hexlify()
     val gc_lock = Lockchest.get(this::class.qualifiedName + "_eikel_GC")
     var holds_lock = false
@@ -40,10 +41,10 @@ class Eikel(val basedir: File, urlpath: String, val mode: EikelMode) {
 
     val headers: Map<String, String>
         get() {
-            try {
-                return Json.decodeFromString(EikelMeta.serializer(), meta_file.readText()).headers
+            return try {
+                Json.decodeFromString(EikelMeta.serializer(), meta_file.readText()).headers
             } catch (ignored: FileNotFoundException) {
-                return HashMap<String, String>() // then there'll be no headers.
+                HashMap<String, String>() // then there'll be no headers.
             }
         }
 

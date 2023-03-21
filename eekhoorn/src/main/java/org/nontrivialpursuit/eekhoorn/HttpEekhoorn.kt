@@ -7,6 +7,7 @@ import org.eclipse.jetty.server.handler.ContextHandler
 import org.eclipse.jetty.server.handler.ContextHandlerCollection
 import org.eclipse.jetty.server.handler.HandlerList
 import org.eclipse.jetty.util.log.Log
+import org.eclipse.jetty.util.log.Logger
 import org.nontrivialpursuit.eekhoorn.httphandlers.*
 import org.nontrivialpursuit.eekhoorn.interfaces.HttpEekhoornInterface
 import org.nontrivialpursuit.eekhoorn.interfaces.KoekoekBridge
@@ -27,7 +28,7 @@ class HttpEekhoorn(
         val DEBUG: Boolean = true) : HttpEekhoornInterface {
     private var jettyserver: Server? = null
     override val credentials: Triple<String, String, String>
-    val logger = Log.getLogger(HttpEekhoorn::class.java.name)
+    val logger: Logger = Log.getLogger(HttpEekhoorn::class.java.name)
     val eikel_basedir: File
         get() {
             return File(this.eekhoorn_basedir, EIKEL_SUBDIR).also { it.mkdir() }

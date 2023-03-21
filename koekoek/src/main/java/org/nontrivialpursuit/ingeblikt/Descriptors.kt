@@ -10,6 +10,7 @@ import java.net.URI
 import java.security.SecureRandom
 import java.util.*
 
+@Suppress("RegExpRedundantEscape")
 val BODY_ID_REX = Regex("\\{[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{10}([a-f0-9]{2})\\}")
 val STATEHASH_REX = Regex("^[0-9a-f]{8}$")
 val GECKO_CHARSET = Charsets.UTF_16LE
@@ -173,7 +174,69 @@ data class DBCacheEntry(
         val request_integrity: String,
         val request_url_fragment: String,
         val response_padding_size: Int?,
-)
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as DBCacheEntry
+
+        if (request_method != other.request_method) return false
+        if (request_url_no_query != other.request_url_no_query) return false
+        if (!request_url_no_query_hash.contentEquals(other.request_url_no_query_hash)) return false
+        if (request_url_query != other.request_url_query) return false
+        if (!request_url_query_hash.contentEquals(other.request_url_query_hash)) return false
+        if (request_referrer != other.request_referrer) return false
+        if (request_headers_guard != other.request_headers_guard) return false
+        if (request_mode != other.request_mode) return false
+        if (request_credentials != other.request_credentials) return false
+        if (request_contentpolicytype != other.request_contentpolicytype) return false
+        if (request_cache != other.request_cache) return false
+        if (request_body_id != other.request_body_id) return false
+        if (response_type != other.response_type) return false
+        if (response_status != other.response_status) return false
+        if (response_status_text != other.response_status_text) return false
+        if (response_headers_guard != other.response_headers_guard) return false
+        if (response_body_id != other.response_body_id) return false
+        if (response_security_info_id != other.response_security_info_id) return false
+        if (response_principal_info != other.response_principal_info) return false
+        if (request_redirect != other.request_redirect) return false
+        if (request_referrer_policy != other.request_referrer_policy) return false
+        if (request_integrity != other.request_integrity) return false
+        if (request_url_fragment != other.request_url_fragment) return false
+        if (response_padding_size != other.response_padding_size) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = request_method.hashCode()
+        result = 31 * result + request_url_no_query.hashCode()
+        result = 31 * result + request_url_no_query_hash.contentHashCode()
+        result = 31 * result + request_url_query.hashCode()
+        result = 31 * result + request_url_query_hash.contentHashCode()
+        result = 31 * result + request_referrer.hashCode()
+        result = 31 * result + request_headers_guard.hashCode()
+        result = 31 * result + request_mode.hashCode()
+        result = 31 * result + request_credentials.hashCode()
+        result = 31 * result + request_contentpolicytype.hashCode()
+        result = 31 * result + request_cache.hashCode()
+        result = 31 * result + (request_body_id?.hashCode() ?: 0)
+        result = 31 * result + response_type.hashCode()
+        result = 31 * result + response_status.hashCode()
+        result = 31 * result + response_status_text.hashCode()
+        result = 31 * result + response_headers_guard.hashCode()
+        result = 31 * result + (response_body_id?.hashCode() ?: 0)
+        result = 31 * result + (response_security_info_id?.hashCode() ?: 0)
+        result = 31 * result + response_principal_info.hashCode()
+        result = 31 * result + request_redirect.hashCode()
+        result = 31 * result + request_referrer_policy.hashCode()
+        result = 31 * result + request_integrity.hashCode()
+        result = 31 * result + request_url_fragment.hashCode()
+        result = 31 * result + (response_padding_size?.hashCode() ?: 0)
+        return result
+    }
+}
 
 @Serializable
 data class CacheEntry(
@@ -225,6 +288,78 @@ data class CacheEntry(
     fun determine_bodysizes(basepath: File) {
         request_bodysize = request_morguepath(basepath)?.length()
         response_bodysize = response_morguepath(basepath)?.length()
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as CacheEntry
+
+        if (request_method != other.request_method) return false
+        if (request_url_no_query != other.request_url_no_query) return false
+        if (!request_url_no_query_hash.contentEquals(other.request_url_no_query_hash)) return false
+        if (request_url_query != other.request_url_query) return false
+        if (!request_url_query_hash.contentEquals(other.request_url_query_hash)) return false
+        if (request_referrer != other.request_referrer) return false
+        if (request_headers_guard != other.request_headers_guard) return false
+        if (request_mode != other.request_mode) return false
+        if (request_credentials != other.request_credentials) return false
+        if (request_contentpolicytype != other.request_contentpolicytype) return false
+        if (request_cache != other.request_cache) return false
+        if (request_body_id != other.request_body_id) return false
+        if (response_type != other.response_type) return false
+        if (response_status != other.response_status) return false
+        if (response_status_text != other.response_status_text) return false
+        if (response_headers_guard != other.response_headers_guard) return false
+        if (response_body_id != other.response_body_id) return false
+        if (response_security_info_id != other.response_security_info_id) return false
+        if (response_principal_info != other.response_principal_info) return false
+        if (request_redirect != other.request_redirect) return false
+        if (request_referrer_policy != other.request_referrer_policy) return false
+        if (request_integrity != other.request_integrity) return false
+        if (request_url_fragment != other.request_url_fragment) return false
+        if (response_padding_size != other.response_padding_size) return false
+        if (response_url_list != other.response_url_list) return false
+        if (request_headers != other.request_headers) return false
+        if (response_headers != other.response_headers) return false
+        if (request_bodysize != other.request_bodysize) return false
+        if (response_bodysize != other.response_bodysize) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = request_method.hashCode()
+        result = 31 * result + request_url_no_query.hashCode()
+        result = 31 * result + request_url_no_query_hash.contentHashCode()
+        result = 31 * result + request_url_query.hashCode()
+        result = 31 * result + request_url_query_hash.contentHashCode()
+        result = 31 * result + request_referrer.hashCode()
+        result = 31 * result + request_headers_guard.hashCode()
+        result = 31 * result + request_mode.hashCode()
+        result = 31 * result + request_credentials.hashCode()
+        result = 31 * result + request_contentpolicytype.hashCode()
+        result = 31 * result + request_cache.hashCode()
+        result = 31 * result + (request_body_id?.hashCode() ?: 0)
+        result = 31 * result + response_type.hashCode()
+        result = 31 * result + response_status.hashCode()
+        result = 31 * result + response_status_text.hashCode()
+        result = 31 * result + response_headers_guard.hashCode()
+        result = 31 * result + (response_body_id?.hashCode() ?: 0)
+        result = 31 * result + (response_security_info_id?.hashCode() ?: 0)
+        result = 31 * result + response_principal_info.hashCode()
+        result = 31 * result + request_redirect.hashCode()
+        result = 31 * result + request_referrer_policy.hashCode()
+        result = 31 * result + request_integrity.hashCode()
+        result = 31 * result + request_url_fragment.hashCode()
+        result = 31 * result + (response_padding_size?.hashCode() ?: 0)
+        result = 31 * result + response_url_list.hashCode()
+        result = 31 * result + request_headers.hashCode()
+        result = 31 * result + response_headers.hashCode()
+        result = 31 * result + (request_bodysize?.hashCode() ?: 0)
+        result = 31 * result + (response_bodysize?.hashCode() ?: 0)
+        return result
     }
 }
 

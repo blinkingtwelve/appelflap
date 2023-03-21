@@ -14,6 +14,7 @@ import java.util.*
 
 val RFC2253_FIELDS = Regex("(?<!\\\\),")
 val RFC2253_KEYVALUES = Regex("(?<!\\\\)=")
+@Suppress("RegExpSingleCharAlternation")
 val RFC2253_UNESCAPE = Regex("\\\\(,|=)")
 
 fun X509Certificate.subject(): Map<String, String> {

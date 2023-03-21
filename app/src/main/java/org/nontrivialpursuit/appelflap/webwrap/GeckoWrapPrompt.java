@@ -59,7 +59,7 @@ import java.util.Locale;
 import static org.nontrivialpursuit.appelflap.Util.FileURInate;
 
 final class GeckoWrapPrompt implements GeckoSession.PromptDelegate {
-    protected static final String LOGTAG = "BasicGeckoViewPrompt";
+    private static final String LOGTAG = "BasicGeckoViewPrompt";
 
     private final Activity mActivity;
     private final int filePickerRequestCode;
@@ -293,7 +293,7 @@ final class GeckoWrapPrompt implements GeckoSession.PromptDelegate {
             list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
         }
 
-        final ArrayAdapter<ModifiableChoice> adapter = new ArrayAdapter<ModifiableChoice>(
+        final ArrayAdapter<ModifiableChoice> adapter = new ArrayAdapter<>(
                 builder.getContext(), android.R.layout.simple_list_item_1) {
             private static final int TYPE_MENU_ITEM = 0;
             private static final int TYPE_MENU_CHECK = 1;
@@ -468,7 +468,7 @@ final class GeckoWrapPrompt implements GeckoSession.PromptDelegate {
         addStandardLayout(builder, prompt.title, /* msg */ null);
 
         final int initial = parseColor(prompt.defaultValue, /* def */ 0);
-        final ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(
+        final ArrayAdapter<Integer> adapter = new ArrayAdapter<>(
                 builder.getContext(), android.R.layout.simple_list_item_1) {
             private LayoutInflater mInflater;
 
@@ -671,6 +671,7 @@ final class GeckoWrapPrompt implements GeckoSession.PromptDelegate {
         @SuppressLint("SimpleDateFormat") String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "img_" + timeStamp + "_";
         File storageDir = new File(mActivity.getCacheDir(), TEMPFILE_CACHEDIR);
+        //noinspection ResultOfMethodCallIgnored
         storageDir.mkdirs();
         return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
@@ -792,7 +793,7 @@ final class GeckoWrapPrompt implements GeckoSession.PromptDelegate {
 
     private Spinner addMediaSpinner(final Context context, final ViewGroup container,
                                     final MediaSource[] sources, final String[] sourceNames) {
-        final ArrayAdapter<MediaSource> adapter = new ArrayAdapter<MediaSource>(
+        final ArrayAdapter<MediaSource> adapter = new ArrayAdapter<>(
                 context, android.R.layout.simple_spinner_item) {
             private View convertView(final int position, final View view) {
                 if (view != null) {

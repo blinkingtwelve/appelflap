@@ -116,7 +116,7 @@ class BundlefileOpener : AppCompatActivity() {
             SimpleDateFormat("y-MM-dd HH:mm:ss Z").format(
                 it * 1000
             ) to it.toString()
-        } ?: "Unknown" to "Unknown"
+        } ?: ("Unknown" to "Unknown")
         return """
             Type:
                 ${bundletype}

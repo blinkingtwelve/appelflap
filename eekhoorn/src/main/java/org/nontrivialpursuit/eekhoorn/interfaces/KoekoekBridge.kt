@@ -25,11 +25,11 @@ interface KoekoekBridge {
     fun serializeCacheRetryOnMissingBodyfile(target: PackupTargetDesignation) {
         var retry = true
         while (retry) {
-            try {
+            retry = try {
                 serializeCache(target)
-                retry = false
+                false
             } catch (e: DanglingBodyFileReferenceException) {
-                retry = true
+                true
             }
         }
     }

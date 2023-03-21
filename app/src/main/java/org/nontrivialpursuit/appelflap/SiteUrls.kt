@@ -5,13 +5,13 @@ import android.net.Uri
 import org.nontrivialpursuit.appelflap.BuildConfig.DEBUG
 
 class SiteUrls(context: Context) {
-    @kotlin.jvm.JvmField
+    @JvmField
     val launchable_schemes = setOf("http", "https")
     var our_schemes: Set<String> = HashSet()
     val debug_allowlistedlisted = setOf("about:config")
     val allowlist = HashSet<String>()
 
-    @kotlin.jvm.JvmField
+    @JvmField
     var wrapped_site_url: String
     var our_domains: Set<String>
 

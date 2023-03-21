@@ -60,6 +60,7 @@ class SetBackgroundedReceiver(val conductor: Conductor) : BroadcastReceiver() {
     }
 }
 
+@Suppress("RemoveExplicitTypeArguments")
 class Conductor private constructor(
         internal val context: Context, val koekoeksNest: KoekoeksNest) : WifiP2pManager.ChannelListener {
 
@@ -184,8 +185,8 @@ class Conductor private constructor(
                         WifiP2pManager.WIFI_P2P_STATE_ENABLED -> {
                             log.d("p2p enabled")
                             p2p_enabled = true
-                            if (target_state !in Runlevels.P2P_STATES && Runlevels.P2P_STATES.intersect(
-                                    Runlevels.levelmap.keys
+                            if (target_state !in P2P_STATES && P2P_STATES.intersect(
+                                    levelmap.keys
                                 ).isNotEmpty()) {
                                 target_state = ConductorState.LURKING
                             }
@@ -203,9 +204,9 @@ class Conductor private constructor(
         override fun onReceive(context: Context, intent: Intent) {
             when (intent.action) {
                 WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION -> {
-                    val p2pinfo: WifiP2pInfo = intent.getParcelableExtra<WifiP2pInfo>(WifiP2pManager.EXTRA_WIFI_P2P_INFO)!!
-                    val networkinfo: NetworkInfo = intent.getParcelableExtra<NetworkInfo>(WifiP2pManager.EXTRA_NETWORK_INFO)!!
-                    val groupinfo: WifiP2pGroup? = intent.getParcelableExtra<WifiP2pGroup>(WifiP2pManager.EXTRA_WIFI_P2P_GROUP)
+                    val p2pinfo: WifiP2pInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_INFO)!!
+                    val networkinfo: NetworkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO)!!
+                    val groupinfo: WifiP2pGroup? = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_GROUP)
                     // log.d("p2pinfo:\n${p2pinfo}\nnetworkinfo:\n${networkinfo}\ngroupinfo:${groupinfo}")
                     current_p2pinfo = p2pinfo
                     current_groupinfo = groupinfo
@@ -395,7 +396,7 @@ class Conductor private constructor(
         if (am_really_hosting && get_p2p_peer_candidates().size == 0) return null  // we could switch to joining, but we'd have no network to join to
 
         // ok we're really going to do something else now, if at all reasonable
-        var available_states: MutableSet<ConductorState> = P2P_STATES.filter { levelmap.containsKey(it) }.minus(target_state)
+        val available_states: MutableSet<ConductorState> = P2P_STATES.filter { levelmap.containsKey(it) }.minus(target_state)
             .minus(ConductorState.LURKING).toMutableSet()
         if (backgrounded) available_states.remove(ConductorState.HOSTING)  // can't start AP when backgrounded/screenlocked
         if (get_p2p_peer_candidates().size > 0) available_states.remove(ConductorState.HOSTING)  // let's not host if we have candidate peers in sight
@@ -493,13 +494,13 @@ class Conductor private constructor(
         multicastlock.also {
             try {
                 if (it.isHeld) it.release()
-            } catch (e: RuntimeException) {
+            } catch (_: RuntimeException) {
             }  // wasn't locked
         }
         screenwakelock.also {
             try {
                 if (it.isHeld) it.release()
-            } catch (e: RuntimeException) {
+            } catch (_: RuntimeException) {
             }  // wasn't locked
         }
         if (TENPLUS) channel.close()

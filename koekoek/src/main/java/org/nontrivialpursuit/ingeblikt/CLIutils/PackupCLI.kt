@@ -58,8 +58,8 @@ object PackupCLI {
             val profiledir = File(cmd.getOptionValue("profiledir", ""))
             val origin = cmd.getOptionValue("origin", "")
             val cachename = cmd.getOptionValue("cachename", "")
-            val version = cmd.getOptionValue("version", )?.toLong()
-            val cachetype = CacheType.valueOf(cmd.getOptionValue("type", ))
+            val version = cmd.getOptionValue("version")?.toLong()
+            val cachetype = CacheType.valueOf(cmd.getOptionValue("type"))
             val outputfile: File
             try {
                 outputfile = File(cmd.getOptionValue("dumpfile"))

@@ -12,7 +12,7 @@ class DumpfileInjector(
         instream: InputStream, pkiOps: PKIOps, val profiledir: File, val dbOps: CacheDBOps, val appelflapBridge: AppelflapBridge? = null) {
 
     val unpacker = DumpfileUnpacker(instream = instream, pkiOps = pkiOps)
-    val sworker = unpacker.dumpdescriptor.serviceworkerDescriptor?.let { it.renamed("{${UUID.randomUUID()}}") }
+    val sworker = unpacker.dumpdescriptor.serviceworkerDescriptor?.renamed("{${UUID.randomUUID()}}")
         ?.also { it.isValid() || throw ServiceworkerSerdeException("Serviceworker unpalatable: ${it.dump()}") }
 
     fun inject(reboot_style: RebootMethod = RebootMethod.NOOP): DumpDescriptor {

@@ -51,7 +51,7 @@ fun getWifiDigest(context: Context): WifiDigest {
 
         val in_apmode = runCatching { WifiManager::class.java.getMethod("isWifiApEnabled").invoke(wiman) }.getOrNull()
             ?.let { it as Boolean? }
-        val apmode_ip = in_apmode.takeIf { it == true }.let { getAPmodeIPv4Address(context) }?.toInt()
+        val apmode_ip = getAPmodeIPv4Address(context)?.toInt()
 
         val ip32 = @Suppress("DEPRECATION") it.ipAddress.takeIf { it !=0 } ?: apmode_ip
         WifiDigest(

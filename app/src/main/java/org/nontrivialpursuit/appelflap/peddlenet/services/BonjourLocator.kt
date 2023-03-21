@@ -13,7 +13,7 @@ class BonjourLocator(val conductor: Conductor) : ServiceHandler {
     override var is_running = false
 
     val nsdmanager: NsdManager by lazy { conductor.context.getSystemService(Context.NSD_SERVICE) as NsdManager }
-    val schedxecutor = Executors.newScheduledThreadPool(1)
+    val schedxecutor: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
     var resolvers: ExecutorService? = null
     var statehash_scanner: ScheduledFuture<*>? = null
 

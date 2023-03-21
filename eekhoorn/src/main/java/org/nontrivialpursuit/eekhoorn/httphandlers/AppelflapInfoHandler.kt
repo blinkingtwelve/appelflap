@@ -1,11 +1,8 @@
 package org.nontrivialpursuit.eekhoorn.httphandlers
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.eclipse.jetty.server.HttpConnection
 import org.eclipse.jetty.server.Request
-import org.eclipse.jetty.server.Response
 import org.eclipse.jetty.server.handler.ContextHandler
 import org.eclipse.jetty.util.log.Log
 import org.eclipse.jetty.util.log.Logger

@@ -33,14 +33,13 @@ class p2pClient(
 
     @SuppressLint("NewApi")
     fun make_p2p_config(peerinfo: Pair<String, String>): WifiP2pConfig {
-        when (Build.VERSION.SDK_INT < 29) {
+        return when (Build.VERSION.SDK_INT < 29) {
 
-            true -> return WifiP2pConfig().also {
+            true -> WifiP2pConfig().also {
                 it.deviceAddress = peerinfo.first
                 it.groupOwnerIntent = 0  // == GROUP_OWNER_INTENT_MIN in api-30
             }
-            else -> return WifiP2pConfig.Builder().setDeviceAddress(MacAddress.fromString(peerinfo.first)).setPassphrase("12345678")
-                .setNetworkName(peerinfo.second).build()
+            else -> WifiP2pConfig.Builder().setDeviceAddress(MacAddress.fromString(peerinfo.first)).setPassphrase("12345678").setNetworkName(peerinfo.second).build()
         }
     }
 
@@ -96,9 +95,9 @@ class p2pClient(
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION -> {
-                val p2pinfo: WifiP2pInfo = intent.getParcelableExtra<WifiP2pInfo>(WifiP2pManager.EXTRA_WIFI_P2P_INFO)!!
-                val networkinfo: NetworkInfo = intent.getParcelableExtra<NetworkInfo>(WifiP2pManager.EXTRA_NETWORK_INFO)!!
-                val groupinfo: WifiP2pGroup? = intent.getParcelableExtra<WifiP2pGroup>(WifiP2pManager.EXTRA_WIFI_P2P_GROUP)
+                val p2pinfo: WifiP2pInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_INFO)!!
+                val networkinfo: NetworkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO)!!
+                val groupinfo: WifiP2pGroup? = intent.getParcelableExtra(WifiP2pManager.EXTRA_WIFI_P2P_GROUP)
                 log.d("Connection changed event: p2pinfo:\n${p2pinfo}\nnetworkinfo:\n${networkinfo}\ngroupinfo:${groupinfo}")
                 p2pinfo.also {
                     if (it.groupFormed && !it.isGroupOwner) conductor.stats.wifip2p_joins_performed += 1

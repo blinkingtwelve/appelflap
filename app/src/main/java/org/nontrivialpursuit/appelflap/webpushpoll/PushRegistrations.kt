@@ -10,6 +10,28 @@ data class Reginfo(var scope: String?, var key: ByteArray, var token: String, va
     init {
         if (key.size != 65) throw RuntimeException("Registration info key size is not 65 bytes")
     }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (javaClass != other?.javaClass) return false
+
+        other as Reginfo
+
+        if (scope != other.scope) return false
+        if (!key.contentEquals(other.key)) return false
+        if (token != other.token) return false
+        if (regid != other.regid) return false
+
+        return true
+    }
+
+    override fun hashCode(): Int {
+        var result = scope?.hashCode() ?: 0
+        result = 31 * result + key.contentHashCode()
+        result = 31 * result + token.hashCode()
+        result = 31 * result + regid.hashCode()
+        return result
+    }
 }
 
 class PushRegistrations(context: Context) {
@@ -44,7 +66,7 @@ class PushRegistrations(context: Context) {
         token: ByteArray?,
         reg_id: String?
     ) {
-        regprefs.edit() {
+        regprefs.edit {
             putString(
                 scope,
                 String.format(
@@ -57,11 +79,11 @@ class PushRegistrations(context: Context) {
     }
 
     fun deleteRegistration(scope: String?) {
-        regprefs.edit() { remove(scope) }
+        regprefs.edit { remove(scope) }
     }
 
     fun storeCursorPos(reg_id: String, cursor_pos: Long) {
-        cursorpositions.edit() {
+        cursorpositions.edit {
             putLong(reg_id, cursor_pos)
         }
     }

@@ -54,7 +54,7 @@ class p2pDiscoverer(
         conductor.p2pmanager.stopPeerDiscovery(conductor.channel, actionlistener)
         try {
             conductor.context.unregisterReceiver(this)
-        } catch (e: IllegalArgumentException) {
+        } catch (_: IllegalArgumentException) {
         }  // pass; wasn't registered
         is_running = false
     }

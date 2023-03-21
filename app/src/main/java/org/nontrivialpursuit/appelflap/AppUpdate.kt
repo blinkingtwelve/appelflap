@@ -145,7 +145,7 @@ class AppUpdate private constructor(val context: Context) {
         }.getOrNull() ?: return false
         apkgrab_resp.use { resp ->
             if (resp.code == 200) {
-                val expected_size = resp.header("Content-Length")?.let { it.toLongOrNull() } ?: return false
+                val expected_size = resp.header("Content-Length")?.toLongOrNull() ?: return false
                 if (expected_size > MAX_APK_FETCH_SIZE) {
                     log.w("APK size of ${expected_size} deemed to large, url: ${apk_url}")
                     return false

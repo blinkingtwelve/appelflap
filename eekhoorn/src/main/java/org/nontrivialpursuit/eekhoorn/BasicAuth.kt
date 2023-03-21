@@ -8,14 +8,14 @@ fun gen_credentials(): Triple<String, String, String> {
     // Generates random username & password packing 47 bits of entropy (Good Enough™)
     val alphabet = ('a'..'z').toList()
     val rando = SecureRandom().asKotlinRandom()
-    var username = (1..5).map { _ -> alphabet.random(rando) }
+    val username = (1..5).map { alphabet.random(rando) }
         .joinToString("")
-    var password = (1..5).map { _ -> alphabet.random(rando) }
+    val password = (1..5).map { alphabet.random(rando) }
         .joinToString("")
     return Triple(username, password, as_requestheader(username, password))
 }
 
 fun as_requestheader(username: String, password: String): String {
-    val encoded = B64Code.encode("${username}:${password}", Charsets.US_ASCII);
+    val encoded = B64Code.encode("${username}:${password}", Charsets.US_ASCII)
     return "Basic ${encoded}"
 }

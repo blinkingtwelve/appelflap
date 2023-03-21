@@ -10,6 +10,7 @@ import org.nontrivialpursuit.appelflap.Logger
 import org.nontrivialpursuit.appelflap.peddlenet.*
 import org.nontrivialpursuit.ingeblikt.Statehash
 import java.util.concurrent.Executors
+import java.util.concurrent.ScheduledExecutorService
 import java.util.concurrent.ScheduledFuture
 import java.util.concurrent.TimeUnit
 
@@ -34,7 +35,7 @@ class APScanner(
         internal val conductor: Conductor, ) : ServiceHandler, BroadcastReceiver() {
     override val log = Logger(this)
     override var is_running = false
-    val schedxecutor = Executors.newScheduledThreadPool(1)
+    val schedxecutor: ScheduledExecutorService = Executors.newScheduledThreadPool(1)
     var scan_trigger_handler: ScheduledFuture<*>? = null
 
     override fun start(): Boolean {

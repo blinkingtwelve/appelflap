@@ -46,7 +46,7 @@ fun File.android_db(ro: Boolean = true): SQLiteDatabase {
                                        (readmode or SQLiteDatabase.NO_LOCALIZED_COLLATORS or SQLiteDatabase.ENABLE_WRITE_AHEAD_LOGGING or SQLiteDatabase.CREATE_IF_NECESSARY),
                                        object : DatabaseErrorHandler {
                                            override fun onCorruption(db: SQLiteDatabase) {
-                                               throw java.lang.RuntimeException("Corrupted SQLite database: ${this.toString()}")
+                                               throw java.lang.RuntimeException("Corrupted SQLite database: ${this}")
                                            }
                                        })
 }
@@ -81,7 +81,7 @@ class AndroidCacheDBOps : CacheDBOps {
 
 
     fun checkDbVersion(conn: SQLiteDatabase) {
-        val pragma = conn.rawQuery("PRAGMA user_version", null).use { it: Cursor ->
+        val pragma = conn.rawQuery("PRAGMA user_version", null).use {
             return@use if (it.moveToFirst()) it.getInt(0) else null
         }
         if (pragma != CACHE_DB_PRAGMA_USER_VERSION) throw CacheDBException("Found cache DB schema version '${pragma}'. Expected version: '${CACHE_DB_PRAGMA_USER_VERSION}'")
@@ -112,7 +112,7 @@ class AndroidCacheDBOps : CacheDBOps {
             }
         } else null
 
-        val cache_id: Int = existing_cache_id ?: {
+        val cache_id: Int = existing_cache_id ?: run {
             val new_cache_id = conn.insert("caches", null, ContentValues(1).apply { putNull("id") })
             try {
                 conn.insertOrThrow("storage", null, ContentValues(3).apply {
@@ -124,7 +124,7 @@ class AndroidCacheDBOps : CacheDBOps {
             } catch (e: SQLException) {
                 throw CacheDBException("Cache already exists: '${name}' in namespace ${namespace}")
             }
-        }.invoke()
+        }
 
         return cache_id to body_gc
     }
@@ -337,7 +337,7 @@ class AndroidCacheDBOps : CacheDBOps {
                     while (it.moveToNext()) {
                         val entry_id = it.getInt("entry_id")
                         val headername = it.getString("name")
-                        if (!(headerFilter?.test_requestheader(headername) ?: false)) {
+                        if (headerFilter?.test_requestheader(headername) != true) {
                             val the_list = the_map.get(entry_id) ?: ArrayList<Pair<String, String>>()
                             the_map[entry_id] = the_list.also { listy -> listy.add(headername to it.getString("value")) }
                         }
@@ -354,7 +354,7 @@ class AndroidCacheDBOps : CacheDBOps {
                         while (it.moveToNext()) {
                             val entry_id = it.getInt("entry_id")
                             val headername = it.getString("name")
-                            if (!(headerFilter?.test_responseheader(headername) ?: false)) {
+                            if (headerFilter?.test_responseheader(headername) != true) {
                                 val the_list = the_map.get(entry_id) ?: ArrayList<Pair<String, String>>()
                                 the_map[entry_id] = the_list.also { listy -> listy.add(headername to it.getString("value")) }
                             }

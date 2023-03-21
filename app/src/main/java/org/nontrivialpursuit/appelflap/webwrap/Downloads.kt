@@ -21,7 +21,6 @@ import java.io.IOException
 import java.io.InputStream
 import java.net.URI
 import java.security.MessageDigest
-import java.util.*
 import java.util.concurrent.Semaphore
 import kotlin.concurrent.thread
 
@@ -235,9 +234,7 @@ class Downloads(val context: Context) {
         return DownloadDisplayDescriptorListing(downloadDir.listFiles()?.mapNotNull { thefile ->
             METAFILE_REX.matchEntire(thefile.name)?.let { therexmatch ->
                 val idparts = therexmatch.groupValues.get(1).split(".", limit = 2).slice(0..1)
-                DownloadEntry(context, idparts[0] to idparts[1]).takeUnless { it.bodyfile.canWrite() }?.let { dlentry ->
-                    dlentry.toDownloadDescriptor()
-                }
+                DownloadEntry(context, idparts[0] to idparts[1]).takeUnless { it.bodyfile.canWrite() }?.toDownloadDescriptor()
             }
         } ?: emptyList())
     }

@@ -6,7 +6,7 @@ import java.io.InputStream
 import java.util.concurrent.Semaphore
 import kotlin.collections.HashMap
 
-class AppelflapStub() : AppelflapBridge {
+class AppelflapStub : AppelflapBridge {
 
     override val packageApkInfo = null
 

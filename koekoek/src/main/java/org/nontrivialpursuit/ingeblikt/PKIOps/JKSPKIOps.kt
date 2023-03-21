@@ -40,9 +40,9 @@ class JKSPKIOps(devcertCommonName: String, applicationID: String, keystoreBackin
         val somedate = Date(0L)
         val certBuilder = JcaX509v3CertificateBuilder(
             subject_but_also_issuer, BigInteger.ONE, somedate, somedate, subject_but_also_issuer, keypair.public
-        );
+        )
         val cert = JcaX509CertificateConverter().setProvider(bcprov)
-            .getCertificate(certBuilder.build(JcaContentSignerBuilder(devkeysignatureAlgorithm).build(keypair.private)));
+            .getCertificate(certBuilder.build(JcaContentSignerBuilder(devkeysignatureAlgorithm).build(keypair.private)))
 
         store.setKeyEntry(DEVKEY_ALIAS, keypair.private, JKS_PASSWORD, arrayOf(cert))
         store.save()

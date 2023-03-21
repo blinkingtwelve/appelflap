@@ -21,10 +21,10 @@ import kotlin.collections.set
 
 
 fun ResultSet.getStringOrNull(colno: Int): String? {
-    try {
-        return this.getString(colno)
+    return try {
+        this.getString(colno)
     } catch (e: Exception) {
-        return null
+        null
     }
 }
 
@@ -354,7 +354,7 @@ class JDBCCacheDBOps : CacheDBOps {
                 while (it.next()) {
                     val entry_id = it.getInt(1)
                     val headername = it.getString(2)
-                    if (!(headerFilter?.test_requestheader(headername) ?: false)) {
+                    if (headerFilter?.test_requestheader(headername) != true) {
                         val the_list = the_map.get(entry_id) ?: ArrayList<Pair<String, String>>()
                         the_map[entry_id] = the_list.also { listy -> listy.add(headername to it.getString(3)) }
                     }
@@ -369,7 +369,7 @@ class JDBCCacheDBOps : CacheDBOps {
                 while (it.next()) {
                     val entry_id = it.getInt(1)
                     val headername = it.getString(2)
-                    if (!(headerFilter?.test_responseheader(headername) ?: false)) {
+                    if (headerFilter?.test_responseheader(headername) != true) {
                         val the_list = the_map.get(entry_id) ?: ArrayList<Pair<String, String>>()
                         the_map[entry_id] = the_list.also { listy -> listy.add(headername to it.getString(3)) }
                     }
@@ -417,7 +417,7 @@ class JDBCCacheDBOps : CacheDBOps {
         }
         return Triple(
             CacheDescriptor(
-                origin.toString(), cachename, namespace, denormalized_entries.size, last_server_timestamp = maxdate(response_headers_map)
+                origin, cachename, namespace, denormalized_entries.size, last_server_timestamp = maxdate(response_headers_map)
             ), CacheSecurityInfoMap(security_info_map), denormalized_entries
         )
     }

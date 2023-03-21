@@ -57,7 +57,7 @@ fun MessageDigest.writethrough(instream: InputStream, outstream: OutputStream): 
 
 
 class SignedDigestChainZipper(val certchain_pem: ByteArray, val outstream: OutputStream, val signer: Signature) {
-    val digester = MessageDigest.getInstance(BUNDLE_DIGEST_ALGO)
+    val digester: MessageDigest = MessageDigest.getInstance(BUNDLE_DIGEST_ALGO)
     val zipOutputStream = ZipOutputStream(outstream).apply {
         setMethod(ZipOutputStream.DEFLATED)
         setLevel(Deflater.NO_COMPRESSION)

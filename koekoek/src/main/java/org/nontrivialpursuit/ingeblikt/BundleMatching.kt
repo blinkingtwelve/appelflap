@@ -12,7 +12,7 @@ fun Subscriptions.classifyBundle(bundle: BundleDescriptor): BundleUtility {
         val injectalicious = injection_rangematch && (deets.injected_version?.let { bundle.version > it } ?: true)
         val distributialicious = (bundle.version in deets.p2p_version_min..deets.p2p_version_max) || injection_rangematch
         return@let BundleUtility(injectalicious, distributialicious)
-    } ?: BundleUtility(false, false)
+    } ?: BundleUtility(injection = false, distribution = false)
 }
 
 fun classifyBundles(subs: Subscriptions, bundles: List<BundleDescriptor>): Map<BundleDescriptor, BundleUtility> {

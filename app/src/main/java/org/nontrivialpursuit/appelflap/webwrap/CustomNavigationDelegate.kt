@@ -59,7 +59,7 @@ internal class CustomNavigationDelegate(private val geckoWrap: GeckoWrap) : Navi
         return null
     }
 
-    override fun onLoadError(session: GeckoSession, uri: String?, error: WebRequestError): GeckoResult<String>? {
+    override fun onLoadError(session: GeckoSession, uri: String?, error: WebRequestError): GeckoResult<String> {
         val (weberr_cat, weberr_code) = listOf(error.category, error.code).map(::weberr)
         Sentry.captureMessage("Load error: uri:${uri}, error category: ${weberr_cat}, error: ${weberr_code}")
         val errorpage = geckoWrap.assets.open(ERRORPAGE_ASSET_LOCATION).bufferedReader().use {

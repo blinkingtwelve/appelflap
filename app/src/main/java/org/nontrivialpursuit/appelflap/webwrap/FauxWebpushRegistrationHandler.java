@@ -37,7 +37,7 @@ public class FauxWebpushRegistrationHandler implements WebPushDelegate {
         WebPushSubscription wps = new WebPushSubscription(scope, endpoint, appserverkey, browserPublicKey, not_an_auth_secret);
         // save the combo for use in polling and unsubscribe
         pushregs.storeRegistration(scope, browserPublicKey, endpoint);
-        GeckoResult<WebPushSubscription> res = new GeckoResult<WebPushSubscription>();
+        GeckoResult<WebPushSubscription> res = new GeckoResult<>();
         res.complete(wps);
         return res;
     }
@@ -48,7 +48,7 @@ public class FauxWebpushRegistrationHandler implements WebPushDelegate {
         Reginfo registered = pushregs.getReginfo(scope);
         if (registered == null) return null;
         WebPushSubscription wps = new WebPushSubscription(scope, registered.getRegid(), new byte[65], registered.getKey(), not_an_auth_secret);
-        GeckoResult<WebPushSubscription> res = new GeckoResult<WebPushSubscription>();
+        GeckoResult<WebPushSubscription> res = new GeckoResult<>();
         res.complete(wps);
         return res;
     }
