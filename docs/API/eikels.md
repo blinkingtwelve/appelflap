@@ -9,7 +9,7 @@ This local fileserver is called Eekhoorn (pronounced like "Acorn"), which is Dut
 3. If you want to set any headers beyond the bare minimum (say Content-Type) that the content should be served out with, you can specify those when you PUT the resource.
 4. `DELETE`s and `PUT`s don't step on the toes of ongoing `GET`s or other `PUT`s. `PUT`s don't become `GET`able unless they succeeded. If you squint it's basically ACID. Perhaps we should call it ACId (small D) because there's no way to fsync() a directory using the NIO API's available to Android 7, hence durability could suffer if the OS crashes.
 
-You can use it right from your PWA (running in Appelflap, [see README.md](README.md)) to PUT loads of stuff unhampered by browser storage quotas, and then you can retrieve it using GET it or pass local webserver URLs to your Javascript APIs (say, some video player).
+You can use it right from your PWA (running in Appelflap, [see README.md](../../README.md)) to PUT loads of stuff unhampered by browser storage quotas, and then you can retrieve it using GET it or pass local webserver URLs to your Javascript APIs (say, some video player).
 
 There's a simple management API available too.
 
