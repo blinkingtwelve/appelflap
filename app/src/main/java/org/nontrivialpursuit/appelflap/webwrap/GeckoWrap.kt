@@ -46,7 +46,7 @@ class GeckoWrap : Activity() {
         navops = CustomNavigationDelegate(this)
         statusnotifier = StatusNotifier(this.applicationContext)
         BACKGROUNDED_MESSAGE = resources.getString(R.string.p2p_backgrounded_no_wifihost) + " \uD83D\uDE22"
-        (findViewById(R.id.webwrap_swipelayout) as CustomSwipeRefreshLayout).setOnRefreshListener {
+        (findViewById<CustomSwipeRefreshLayout>(R.id.webwrap_swipelayout)).setOnRefreshListener {
             progressDelegate.setRefreshing(false)
         }
         if (savedInstanceState != null && application.geckoRuntimeManager != null) return

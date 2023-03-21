@@ -126,7 +126,11 @@ class AppUpdate private constructor(val context: Context) {
         )!!
         val candidate_versioncode = PackageInfoCompat.getLongVersionCode(candidate_pkginfo)
         if (candidate_versioncode <= BuildConfig.VERSION_CODE || candidate_pkginfo.packageName != BuildConfig.APPLICATION_ID) return false to 0
-        if (candidate_pkginfo.applicationInfo.minSdkVersion > Build.VERSION.SDK_INT) return false to 0
+        if (if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                candidate_pkginfo.applicationInfo.minSdkVersion > Build.VERSION.SDK_INT
+            } else {
+                true  // This makes Android < 7.0 (which can't read the minSdkVersion from a package) go ahead with an upgrade, regardless. Let's just hope it's compatible. Further down the line the actual upgrade installer might bomb out in the users face if the upgrade is not compatible.
+            }) return false to 0
         if (!checkSignature(candidate_pkginfo) || !checkABI(apkfile)) return false to 0
         return true to candidate_versioncode
     }

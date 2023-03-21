@@ -48,9 +48,7 @@ import org.nontrivialpursuit.appelflap.Logger;
 import org.nontrivialpursuit.appelflap.R;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -58,19 +56,17 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-import static java.io.File.createTempFile;
-import static org.nontrivialpursuit.appelflap.Const.GECKOVIEW_FILE_URI_TO_TEMPFILE_EXPIRY;
 import static org.nontrivialpursuit.appelflap.Util.FileURInate;
 
 final class GeckoWrapPrompt implements GeckoSession.PromptDelegate {
     protected static final String LOGTAG = "BasicGeckoViewPrompt";
 
     private final Activity mActivity;
-    private int filePickerRequestCode;
+    private final int filePickerRequestCode;
     private GeckoResult<PromptResponse> mFileResponse;
     private FilePrompt mFilePrompt;
     private Uri ImageURI;
-    private Logger log = new Logger(this);
+    private final Logger log = new Logger(this);
     final String TEMPFILE_CACHEDIR = "tempfiles";
 
     public GeckoWrapPrompt(final Activity activity, final int filePickerRequestCode) {
@@ -676,8 +672,7 @@ final class GeckoWrapPrompt implements GeckoSession.PromptDelegate {
         String imageFileName = "img_" + timeStamp + "_";
         File storageDir = new File(mActivity.getCacheDir(), TEMPFILE_CACHEDIR);
         storageDir.mkdirs();
-        File tempfile = File.createTempFile(imageFileName, ".jpg", storageDir);
-        return tempfile;
+        return File.createTempFile(imageFileName, ".jpg", storageDir);
     }
 
 

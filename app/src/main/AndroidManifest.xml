@@ -29,7 +29,7 @@
         android:label="@string/WEBWRAP_TITLE"
         android:usesCleartextTraffic="true"
         tools:remove="android:appComponentFactory"
-        tools:targetApi="m">
+        >
         <!-- tools:remove="android:appComponentFactory" per https://stackoverflow.com/a/65980047 -->
         <meta-data
             android:name="io.sentry.ndk.enable"
@@ -63,7 +63,7 @@
             android:launchMode="singleTask"
             android:noHistory="false"
             android:taskAffinity=".GeckoWrap"
-            android:theme="@style/android:Theme.Holo.Light"
+            android:theme="@android:style/Theme.Holo.Light"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

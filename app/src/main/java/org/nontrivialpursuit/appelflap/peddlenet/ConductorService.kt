@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.IBinder
 import android.os.SystemClock
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import org.nontrivialpursuit.appelflap.Appelflap
 import org.nontrivialpursuit.appelflap.Logger
 import org.nontrivialpursuit.appelflap.NotificationIDs
@@ -35,7 +36,7 @@ class ConductorService : Service() {
                 startIntent.putExtra("portno", it)
             }
             startIntent.putExtra("intent_created_at", SystemClock.elapsedRealtime())
-            context.startForegroundService(startIntent)
+            ContextCompat.startForegroundService(context, startIntent)
         }
 
         fun stopService(context: Context) {

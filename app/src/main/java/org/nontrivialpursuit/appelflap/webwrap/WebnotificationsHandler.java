@@ -26,12 +26,12 @@ import static org.nontrivialpursuit.appelflap.webwrap.GeckoWrapKt.INTENT_EXTRA_N
 
 public class WebnotificationsHandler implements WebNotificationDelegate {
 
-    private GeckoRuntime geckoruntime;
-    private NotificationManager notyman;
-    private Context context;
+    private final GeckoRuntime geckoruntime;
+    private final NotificationManager notyman;
+    private final Context context;
 
-    private HashMap<String, Integer> mNotificationIDMap = new HashMap<>();
-    private HashMap<Integer, WebNotification> mNotificationMap = new HashMap<>();
+    private final HashMap<String, Integer> mNotificationIDMap = new HashMap<>();
+    private final HashMap<Integer, WebNotification> mNotificationMap = new HashMap<>();
     private int mLastID = 100;
 
     public WebnotificationsHandler(Context context, GeckoRuntime geckoruntime) {

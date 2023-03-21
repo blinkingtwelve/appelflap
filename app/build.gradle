@@ -57,7 +57,7 @@ android {
     compileSdk 31
     buildToolsVersion '34.0.0 rc2'
     defaultConfig {
-        minSdkVersion 26  // Android 8.0
+        minSdkVersion 23  // Android 6.0 "Macadamia Nut Cookie" released October 2, 2015
         targetSdkVersion 31
     }
     buildTypes {
