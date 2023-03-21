@@ -39,7 +39,7 @@ class JefferiesTube(
                 true
             }
             "GET" to "/geckocache" -> {
-                val target = PackupTargetDesignation(
+                val packuptarget = PackupTargetDesignation(
                     CacheType.valueOf(request.getParameter("type")),
                     request.getParameter("origin"),
                     request.getParameter("cache"),
@@ -51,7 +51,7 @@ class JefferiesTube(
                         eekhoorn.koekoekBridge.profile_dir,
                         outstream,
                         eekhoorn.koekoekBridge.pkiOps,
-                        target,
+                        packuptarget,
                         HeaderFilter.sane_default()
                     )
                 }

@@ -26,10 +26,9 @@ fun String.percent_encode(): String {
     val letters_range = 0x61..0x7a
 
     fun tran(c: Char): String {
-        val cp = c.toInt()
-        return when (cp) {
+        return when (c.code) {
             in digits_range, in caps_range, in letters_range -> "$c"
-            else -> "%%%02X".format(cp)
+            else -> "%%%02X".format(c.code)
         }
     }
     return this.toCharArray().map(::tran).joinToString("")

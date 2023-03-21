@@ -36,7 +36,6 @@ class AppelflapInfoHandler(contextPath: String, val eekhoorn: HttpEekhoornInterf
 
     override fun doHandle(
             target: String, baseRequest: Request, request: HttpServletRequest, response: HttpServletResponse) {
-        val base_response: Response = HttpConnection.getCurrentConnection().httpChannel.response
         baseRequest.isHandled = when (request.method to target) {
             "GET" to "/wifi-info" -> {
                 response.contentType = JSON_HTTP_CONTENTTYPE

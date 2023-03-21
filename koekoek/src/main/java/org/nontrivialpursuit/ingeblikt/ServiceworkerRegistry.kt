@@ -85,8 +85,8 @@ class ServiceworkerRegistry(val profiledir: File) {
         return stagingdir.apply { mkdir() }.listFiles { file -> file.isFile }.mapNotNull { file ->
             SERVICEWORKER_STAGING_FILE_REX.matchEntire(file.name)?.let {
                 val (seq, dephash) = it.destructured
-                ServiceworkerDescriptor.fromDump(file.readText()).takeIf { it.isValid() }?.let {
-                    return@let Triple(seq.toInt(), dephash, it)
+                ServiceworkerDescriptor.fromDump(file.readText()).takeIf { descriptor -> descriptor.isValid() }?.let dumpdesc_augment@ { descriptor ->
+                    return@dumpdesc_augment Triple(seq.toInt(), dephash, descriptor)
                 }
             }
         }.sortedBy { it.first }.map { it.second to it.third }
